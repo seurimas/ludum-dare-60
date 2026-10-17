@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { blankSheet, copyCard, serializeBackup, validateBackup } from "./cards.js";
+import { blankSheet, blankPage, copyCard, copyPage, serializeBackup, validateBackup } from "./cards.js";
 
 test("blank sheets contain 12 independent cards and costs", () => {
   const cards = blankSheet();
@@ -9,7 +9,7 @@ test("blank sheets contain 12 independent cards and costs", () => {
   assert.equal(cards[1].costs[0].number, 1);
 });
 
-test("version 1 backups round trip all supported colors and circle counts", () => {
+test("version 1 backups migrate all supported colors and circle counts", () => {
   const cards = blankSheet();
   [0, 2, 3, 4, 5].forEach((circles, index) => {
     cards[index] = {
@@ -17,7 +17,24 @@ test("version 1 backups round trip all supported colors and circle counts", () =
       costs: ["red", "blue", "green", "white", "black"].map((color, i) => ({ color, number: i ? 999 : 1 })),
     };
   });
-  assert.deepEqual(validateBackup(JSON.parse(serializeBackup(cards))), cards);
+  assert.deepEqual(validateBackup({ version: 1, cards }), [{ name: "Page 1", cards }]);
+});
+
+test("version 2 backups round trip multiple named pages", () => {
+  const pages = [blankPage("Ember"), blankPage("Water"), blankPage("")];
+  pages[1].cards[0].title = "River";
+  assert.deepEqual(validateBackup(JSON.parse(serializeBackup(pages))), pages);
+});
+
+test("duplicated and new pages have independent cards and costs", () => {
+  const original = blankPage("Ember");
+  const copy = copyPage(original);
+  assert.equal(copy.name, "Ember (copy)");
+  copy.cards[0].title = "Changed";
+  copy.cards[0].costs[0].number = 3;
+  assert.equal(original.cards[0].title, "");
+  assert.equal(original.cards[0].costs[0].number, 1);
+  assert.notEqual(blankPage().cards, original.cards);
 });
 
 test("copying does not share mutable costs", () => {
@@ -28,9 +45,12 @@ test("copying does not share mutable costs", () => {
 });
 
 test("invalid backups are rejected", () => {
-  for (const data of [null, {}, { version: 2, cards: blankSheet() }, { version: 1, cards: [] }]) {
-    assert.throws(() => validateBackup(data), /exactly 12 cards/);
+  for (const data of [null, {}, { version: 3 }, { version: 2, pages: [] }, { version: 2, cards: blankSheet() }]) {
+    assert.throws(() => validateBackup(data), /at least one page/);
   }
+  assert.throws(() => validateBackup({ version: 1, cards: [] }), /exactly 12 cards/);
+  assert.throws(() => validateBackup({ version: 2, pages: [{ name: 123, cards: blankSheet() }] }), /text name/);
+  assert.throws(() => validateBackup({ version: 2, pages: [{ name: "Empty", cards: [] }] }), /Page 1:.*exactly 12 cards/);
   for (const patch of [
     { title: null }, { tribe: 2 }, { keywords: [] }, { circles: 1 }, { circles: 6 },
     { costs: [] }, { costs: Array(6).fill({ color: "red", number: 1 }) },
@@ -40,5 +60,6 @@ test("invalid backups are rejected", () => {
     const cards = blankSheet();
     cards[0] = { ...cards[0], ...patch };
     assert.throws(() => validateBackup({ version: 1, cards }), /Card 1 has invalid data/);
+    assert.throws(() => validateBackup({ version: 2, pages: [{ name: "Invalid", cards }] }), /Page 1: Card 1 has invalid data/);
   }
 });

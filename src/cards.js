@@ -12,14 +12,35 @@ export const blankCard = () => ({
 });
 
 export const blankSheet = () => Array.from({ length: CARD_COUNT }, blankCard);
-export const serializeBackup = (cards) => JSON.stringify({ version: 1, cards }, null, 2);
+export const blankPage = (name = "Page 1") => ({ name, cards: blankSheet() });
+export const serializeBackup = (pages) => JSON.stringify({ version: 2, pages }, null, 2);
 export const copyCard = (card) => ({ ...card, costs: card.costs.map((cost) => ({ ...cost })) });
+export const copyPage = (page) => ({ name: `${page.name} (copy)`, cards: page.cards.map(copyCard) });
 
 export function validateBackup(data) {
-  if (!data || data.version !== 1 || !Array.isArray(data.cards) || data.cards.length !== CARD_COUNT) {
-    throw new Error("The backup must contain exactly 12 cards and use format version 1.");
+  if (data?.version === 1) {
+    return [{ name: "Page 1", cards: validateCards(data.cards) }];
   }
-  return data.cards.map((card, index) => {
+  if (!data || data.version !== 2 || !Array.isArray(data.pages) || data.pages.length === 0) {
+    throw new Error("The backup must use format version 1 or 2 and contain at least one page.");
+  }
+  return data.pages.map((page, index) => {
+    if (!page || typeof page.name !== "string") {
+      throw new Error(`Page ${index + 1} must have a text name.`);
+    }
+    try {
+      return { name: page.name, cards: validateCards(page.cards) };
+    } catch (error) {
+      throw new Error(`Page ${index + 1}: ${error.message}`);
+    }
+  });
+}
+
+function validateCards(cards) {
+  if (!Array.isArray(cards) || cards.length !== CARD_COUNT) {
+    throw new Error("Each page must contain exactly 12 cards.");
+  }
+  return cards.map((card, index) => {
     const invalid = () => new Error(`Card ${index + 1} has invalid data. Use text fields, 0 or 2-5 circles, and 1-5 costs with a supported color and a whole number from 1 to 999.`);
     if (!card || typeof card.title !== "string" || typeof card.tribe !== "string" ||
         typeof card.keywords !== "string" || !CIRCLE_COUNTS.includes(card.circles) ||
