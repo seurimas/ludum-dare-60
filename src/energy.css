@@ -1,0 +1,32 @@
+main.energy-main { display: block; }
+.energy-page { margin-top: 24px; }
+.sheet.energy-sheet { grid-template-columns: repeat(3, 2in); grid-template-rows: repeat(3, 3in); justify-content: center; align-content: center; }
+.energy-card { position: relative; border: .5pt dashed #929292; padding: .12in; min-width: 0; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .08in; color: black; background: white; }
+.energy-card-label { text-transform: uppercase; letter-spacing: 2px; font-size: 10px; }
+.energy-types { display: flex; width: 100%; justify-content: center; align-items: stretch; }
+.energy-type { display: flex; flex: 1; min-width: 0; flex-direction: column; align-items: center; justify-content: center; gap: .07in; font-size: 15px; font-weight: 650; }
+.energy-icon { width: 1.4cm; height: 1.4cm; display: block; flex-shrink: 0; }
+.energy-corner { position: absolute; display: flex; align-items: center; gap: .02in; }
+.energy-corner .energy-icon { width: .5cm; height: .5cm; }
+.energy-corner-slash { font-size: 16px; line-height: 1; }
+.energy-corner-top-left { top: .08in; left: .08in; }
+.energy-corner-top-right { top: .08in; right: .08in; }
+.energy-corner-bottom-left { bottom: .08in; left: .08in; }
+.energy-corner-bottom-right { bottom: .08in; right: .08in; }
+.split-energy .energy-types { flex-direction: column; }
+.split-energy .energy-type { padding: .1in 0; }
+.split-energy .energy-type + .energy-type { border-top: 1pt solid #777; }
+.energy-print-mode > header,
+.energy-print-mode .energy-main > :not(.energy-page),
+.energy-print-mode .energy-page-heading { display: none !important; }
+.energy-print-mode .energy-main { padding: 0; margin: 0; }
+.energy-print-mode .energy-page { margin: 0; }
+.energy-print-mode .preview-scroll { overflow: visible; padding: 0; }
+.energy-print-mode .energy-sheet { box-shadow: none; }
+@media print {
+  .energy-app > header,
+  .energy-app .energy-main > :not(.energy-page) { display: none !important; }
+  .energy-page { margin: 0; break-inside: avoid; break-after: page; }
+  .energy-page:last-child { break-after: auto; }
+  .energy-page-heading { display: none; }
+}

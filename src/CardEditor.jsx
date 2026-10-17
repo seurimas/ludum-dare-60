@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { CARD_COUNT, CIRCLE_COUNTS, COLORS } from "./cards.js";
+import { CARD_COUNT, COLORS } from "./cards.js";
+import CircleEditor from "./CircleEditor.jsx";
 
 function CostNumber({ number, index, onChange, onError }) {
   const [draft, setDraft] = useState(String(number));
@@ -43,6 +44,12 @@ export default function CardEditor({ card, selected, onSelect, onChange, onCopy,
         </select>
         <button type="button" aria-label="Next card" disabled={selected === CARD_COUNT - 1} onClick={() => onSelect(selected + 1)}>Next</button>
       </div>
+      <div className="field">
+        <label htmlFor="card-color">Card color</label>
+        <select id="card-color" value={card.color} onChange={(event) => onChange({ color: event.target.value })}>
+          {COLORS.map((color) => <option key={color} value={color}>{color[0].toUpperCase() + color.slice(1)}</option>)}
+        </select>
+      </div>
       {[
         ["title", "Title", "Card title"],
         ["tribe", "Tribe", "Tribe"],
@@ -57,14 +64,9 @@ export default function CardEditor({ card, selected, onSelect, onChange, onCopy,
           )}
         </div>
       ))}
-      <div className="field">
-        <label htmlFor="circles">Circle row</label>
-        <select id="circles" value={card.circles} onChange={(event) => onChange({ circles: Number(event.target.value) })}>
-          {CIRCLE_COUNTS.map((count) => <option key={count} value={count}>{count ? `${count} circles` : "No circles"}</option>)}
-        </select>
-      </div>
+      <CircleEditor circles={card.circles} onChange={(circles) => onChange({ circles })} />
       <fieldset>
-        <legend>Cost (1-5 colored rectangles)</legend>
+        <legend>Cost (1-5 labeled rectangles)</legend>
         {card.costs.map((cost, index) => (
           <div className="cost-row" key={index}>
             <select aria-label={`Cost ${index + 1} color`} value={cost.color} onChange={(event) => changeCost(index, { color: event.target.value })}>
@@ -85,7 +87,7 @@ export default function CardEditor({ card, selected, onSelect, onChange, onCopy,
         <button type="button" disabled={selected === CARD_COUNT - 1} onClick={onCopy}>Copy to next card</button>
         <button type="button" onClick={onClear}>Clear card</button>
       </div>
-      <p className="hint">Click any card to edit it. Changes are saved in this browser automatically. Download a backup to keep or share your work.</p>
+      <p className="hint">Click any card to edit it. Changes are saved in this browser automatically. Download a backup to keep or share your edits.</p>
       <p className={`status${saveStatus.error ? " error" : ""}`} role="status" aria-live="polite">{saveStatus.text}</p>
     </section>
   );

@@ -1,20 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import CardEditor from "./CardEditor.jsx";
 import CardSheet, { getOverflowWarning } from "./CardSheet.jsx";
-import { STORAGE_KEY, blankCard, blankPage, blankSheet, copyCard, copyPage, serializeBackup, validateBackup } from "./cards.js";
+import { STORAGE_KEY, CARD_COUNT, blankCard, blankPage, blankSheet, copyCard, copyPage, createInitialPages, serializeBackup, validateBackup } from "./cards.js";
 import PageSelector from "./PageSelector.jsx";
 
 function loadSheet() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
+    const pages = saved ? validateBackup(JSON.parse(saved)) : createInitialPages();
+    if (!saved) localStorage.setItem(STORAGE_KEY, serializeBackup(pages));
     return {
-      pages: saved ? validateBackup(JSON.parse(saved)) : [blankPage()],
-      status: { text: saved ? "Restored your saved pages." : "Ready. Changes will be saved automatically.", error: false },
+      pages,
+      status: { text: saved ? "Restored your saved pages." : "New spread generated. Edits will be saved automatically.", error: false },
     };
   } catch (error) {
     return {
-      pages: [blankPage()],
-      status: { text: `Could not restore saved cards: ${error.message} You can open a downloaded backup.`, error: true },
+      pages: createInitialPages(),
+      status: { text: `Could not initialize or restore saved pages: ${error.message} Download a backup to keep edits.`, error: true },
     };
   }
 }
@@ -28,7 +31,9 @@ export default function App() {
   const [selected, setSelected] = useState(0);
   const [message, setMessage] = useState({ text: "", error: false });
   const [overflowWarning, setOverflowWarning] = useState("");
+  const [printAll, setPrintAll] = useState(false);
   const sheetRef = useRef(null);
+  const allPagesRef = useRef(null);
   const fileRef = useRef(null);
 
   useEffect(() => {
@@ -40,6 +45,12 @@ export default function App() {
       window.removeEventListener("resize", check);
     };
   }, [cards]);
+
+  useEffect(() => {
+    const resetPrintMode = () => setPrintAll(false);
+    window.addEventListener("afterprint", resetPrintMode);
+    return () => window.removeEventListener("afterprint", resetPrintMode);
+  }, []);
 
   function savePages(nextPages) {
     setPages(nextPages);
@@ -75,7 +86,7 @@ export default function App() {
   }
 
   function deletePage() {
-    if (!window.confirm(`Delete "${pages[selectedPage].name || "Untitled page"}" and its 12 cards? This cannot be undone.`)) return;
+    if (!window.confirm(`Delete "${pages[selectedPage].name || "Untitled page"}" and its ${CARD_COUNT} cards? This cannot be undone.`)) return;
     savePages(pages.filter((_, index) => index !== selectedPage));
     selectPage(Math.min(selectedPage, pages.length - 2));
   }
@@ -96,16 +107,23 @@ export default function App() {
   }
 
   function resetSheet() {
-    if (!window.confirm("Clear all 12 cards on the selected page? Other pages and this page's name will be kept. Download a backup first if you want to keep these cards.")) return;
+    if (!window.confirm(`Clear all ${CARD_COUNT} cards on the selected page? Other pages and this page's name will be kept. Download a backup first if you want to keep these cards.`)) return;
     save(blankSheet());
     setSelected(0);
     setMessage({ text: "Selected page cleared.", error: false });
   }
 
-  function printSheet() {
-    const warning = getOverflowWarning(sheetRef.current);
-    setOverflowWarning(warning);
+  function printSheet(allPages = false) {
+    const warning = allPages
+      ? Array.from(allPagesRef.current.querySelectorAll(".sheet")).map((sheet, index) => {
+        const text = getOverflowWarning(sheet);
+        return text ? `${pages[index].name || `Page ${index + 1}`}: ${text}` : "";
+      }).filter(Boolean).join("\n")
+      : getOverflowWarning(sheetRef.current);
+    if (allPages) setMessage({ text: warning, error: false });
+    else setOverflowWarning(warning);
     if (warning && !window.confirm(warning + "\nPrint anyway?")) return;
+    flushSync(() => setPrintAll(allPages));
     window.print();
   }
 
@@ -140,10 +158,11 @@ export default function App() {
   }
 
   return (
-    <>
+    <div className={printAll ? "print-all-mode" : ""}>
       <header>
         <h1>Card Sheet Maker</h1>
-        <p>12 cards per page. No account or internet needed once running.</p>
+        <p>{CARD_COUNT} cards per page. No account or internet needed once running.</p>
+        <a className="header-link" href="/energy">Energy cards</a>
       </header>
       <main>
         <CardEditor
@@ -154,13 +173,14 @@ export default function App() {
         />
         <section aria-label="Printable sheet">
           <div className="toolbar">
-            <button type="button" className="primary" onClick={printSheet}>Print page / Save PDF</button>
+            <button type="button" className="primary" onClick={() => printSheet(true)}>Print all pages / Save PDF</button>
+            <button type="button" onClick={() => printSheet()}>Print page / Save PDF</button>
             <button type="button" onClick={downloadBackup}>Download all pages</button>
             <button type="button" onClick={() => fileRef.current.click()}>Open backup</button>
             <input ref={fileRef} type="file" accept=".json,application/json" hidden onChange={openBackup} />
             <button type="button" onClick={resetSheet}>Clear page</button>
           </div>
-          <p className="hint print-help">US Letter, portrait, 12 square cards (2.5 &times; 2.5 inches). Print at <strong>100% / Actual size</strong>, with <strong>headers and footers off</strong> and <strong>background graphics on</strong>. Cut along the dashed lines.</p>
+          <p className="hint print-help">US Letter, portrait, 6 cards in 3 rows of 2 with 3 mm gaps. Print at <strong>100% / Actual size</strong>, with <strong>headers and footers off</strong>. All card colors are written as text for monochrome printing. Cut along the dashed lines.</p>
           <p className={`status${message.error ? " error" : ""}`} role="status" aria-live="polite">{message.text}</p>
           <p className="status notice" role="status" aria-live="polite">{overflowWarning}</p>
           <PageSelector
@@ -171,7 +191,14 @@ export default function App() {
           <CardSheet cards={cards} selected={selected} onSelect={setSelected} sheetRef={sheetRef} />
         </section>
       </main>
+      <div className="all-pages-print" ref={allPagesRef} aria-hidden="true">
+        {pages.map((page, index) => (
+          <div className="print-page" key={index}>
+            <CardSheet cards={page.cards} />
+          </div>
+        ))}
+      </div>
       <footer className="hint">Your cards stay on this computer. Download a backup to keep or share them. To run again, use npm run dev.</footer>
-    </>
+    </div>
   );
 }
