@@ -1,0 +1,65 @@
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #172334; background: #edf1f6; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+header { padding: 20px 28px; background: #172334; color: white; }
+h1 { margin: 0 0 6px; font-size: 24px; }
+header p { margin: 0; color: #d0dbea; }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; background: white; color: #172334; border: 1px solid #a7b3c4; border-radius: 6px; padding: 8px 12px; }
+button:hover { background: #eaf1fc; }
+button:disabled { cursor: default; opacity: .5; }
+button.primary { background: #205fc7; border-color: #205fc7; color: white; }
+:focus-visible { outline: 3px solid #387be2; outline-offset: 2px; }
+main { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 24px; padding: 24px; align-items: start; }
+.editor { background: white; border: 1px solid #d1d9e4; border-radius: 12px; padding: 20px; }
+h2 { font-size: 18px; margin: 0 0 14px; }
+label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+input, select, textarea { width: 100%; padding: 8px; border: 1px solid #a7b3c4; border-radius: 5px; background: white; color: #172334; }
+textarea { resize: vertical; min-height: 110px; }
+.field { margin-bottom: 16px; }
+.hint { font-size: 13px; color: #526078; line-height: 1.5; }
+.navigation, .actions, .toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.navigation { justify-content: space-between; margin-bottom: 16px; }
+.navigation select { width: 112px; }
+fieldset { border: 0; padding: 0; margin: 0 0 16px; min-width: 0; }
+legend { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.cost-row { display: grid; grid-template-columns: minmax(0, 1fr) 64px 36px; gap: 6px; margin-bottom: 8px; }
+.cost-row button { padding: 6px; }
+.actions { margin-top: 16px; }
+.toolbar { margin-bottom: 12px; }
+.status { font-size: 13px; margin: 12px 0 0; line-height: 1.5; }
+.error { color: #a02520; }
+.notice { color: #8b4500; }
+.preview-scroll { overflow: auto; padding: 4px 4px 16px; }
+.sheet { width: 7.5in; height: 10in; display: grid; grid-template-columns: repeat(3, 2.5in); grid-template-rows: repeat(4, 2.5in); background: white; box-shadow: 0 3px 16px #17233426; }
+.card { width: 2.5in; height: 2.5in; border: .5pt dashed #929292; padding: .12in; display: flex; flex-direction: column; gap: .055in; color: black; background: white; overflow: hidden; cursor: pointer; }
+.card.selected { outline: 3px solid #205fc7; outline-offset: -3px; }
+.card-heading { flex: 0 0 auto; }
+.card-title { font-family: Georgia, serif; font-size: 17px; line-height: 1.15; font-weight: bold; max-height: .42in; overflow: hidden; overflow-wrap: anywhere; }
+.card-tribe { font-size: 11px; line-height: 1.25; margin-top: 3px; max-height: .3in; overflow: hidden; overflow-wrap: anywhere; }
+.card-center { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: .08in; }
+.card-keywords { font-size: 12px; line-height: 1.3; white-space: pre-wrap; overflow-wrap: anywhere; overflow: hidden; min-height: 0; text-align: center; }
+.circles { display: flex; justify-content: center; gap: .08in; flex: 0 0 auto; }
+.circle { width: .25in; height: .25in; border: 1.4pt solid black; border-radius: 50%; flex: 0 0 .25in; }
+.card-costs { display: flex; gap: .045in; flex: 0 0 .32in; }
+.cost { flex: 1; min-width: 0; border: 1pt solid black; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 750; line-height: 1; }
+.cost-red { background: #b92222; color: white; }
+.cost-blue { background: #1856b1; color: white; }
+.cost-green { background: #206b38; color: white; }
+.cost-white { background: white; color: black; }
+.cost-black { background: #191919; color: white; }
+footer { padding: 0 24px 24px; }
+@media (max-width: 800px) {
+  main { grid-template-columns: 1fr; padding: 16px; }
+  header { padding: 20px 16px; }
+}
+@page { size: letter portrait; margin: .5in; }
+@media print {
+  :root, body { background: white; }
+  header, .editor, .toolbar, .print-help, .status, footer { display: none !important; }
+  main { display: block; padding: 0; margin: 0; }
+  .preview-scroll { overflow: visible; padding: 0; }
+  .sheet { box-shadow: none; break-inside: avoid; }
+  .card { cursor: default; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .card.selected { outline: none; }
+}
