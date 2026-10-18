@@ -6,16 +6,26 @@ export const STORAGE_KEY = "card-sheet-maker-v6";
 export const CARD_FORMAT_VERSION = 6;
 export const CARD_COUNT = 6;
 export const SYMBOL_TRIBES = ENERGY_TYPES.map((type) => type.name);
-export const TRIBES = [...SYMBOL_TRIBES, "Starter"];
+export const TRIBES = [...SYMBOL_TRIBES, "Starter", "Omni"];
+// Starter prints no cost. Omni always prints one circle per symbol tribe, with
+// any cost above 3 filled by empty circles, so it keeps a cost selector.
+export const NO_COST_SELECTOR_TRIBES = ["Starter"];
+export const NO_TRIBE_SHORTCUT_TRIBES = ["Starter", "Omni"];
 export const CIRCLE_CONTENTS = ["empty", ...SYMBOL_TRIBES, "equal", "asterisk"];
 export const ATTACHABLE_SLOTS = ["left", "right", "bottom"];
 export const blankAttachables = () => ({ left: "", right: "", bottom: "" });
 export const SIDE_ATTACHABLE_SLOTS = ["left", "right"];
-// Side markers sit where circles would print, so a non-component card uses one or the other.
-export const hasSideAttachables = (card) => !card.component && SIDE_ATTACHABLE_SLOTS.some((slot) => card.attachables?.[slot]?.trim());
+// Side markers sit where circles would print, so a non-component, non-relic card uses one or the other.
+export const hasSideAttachables = (card) => !card.component && !card.relic && SIDE_ATTACHABLE_SLOTS.some((slot) => card.attachables?.[slot]?.trim());
 export const hasCircleSideConflict = (card) => hasSideAttachables(card) && card.circles.length > 0;
 export const MAX_CIRCLES = 6;
 export const blankCircle = () => ({ content: "empty" });
+
+// Relic cards are upright (unlike rotated Components) and split into fixed
+// thirds, each with free text and a fixed row of unlabeled 8mm boxes.
+export const RELIC_SECTIONS = ["top", "middle", "bottom"];
+export const RELIC_BOX_COUNTS = { top: 3, middle: 3, bottom: 4 };
+export const blankRelicText = () => ({ top: "", middle: "", bottom: "" });
 
 export const CIRCLE_SHORTCUTS = ["1 tribe", "2 tribe", "1 any", "special"];
 
@@ -24,7 +34,7 @@ export function applyCircleShortcut(name, circles, tribe) {
   if (name === "special") return circles.map((circle) => ({ ...circle, content: "asterisk" }));
   if (name === "1 any") return [blankCircle()];
   if (!TRIBES.includes(tribe)) throw new Error(`Unknown tribe: ${tribe}`);
-  if (tribe === "Starter") throw new Error("Starter has no tribe circle shortcuts.");
+  if (NO_TRIBE_SHORTCUT_TRIBES.includes(tribe)) throw new Error(`${tribe} has no tribe circle shortcuts.`);
   return Array.from({ length: name === "2 tribe" ? 2 : 1 }, () => ({ content: tribe }));
 }
 
@@ -33,15 +43,27 @@ export const blankCard = () => ({
   tribe: TRIBES[0],
   keywords: "",
   component: false,
+  relic: false,
   cost: 3,
   circles: [],
   attachables: blankAttachables(),
+  relicText: blankRelicText(),
 });
 
 export function setComponent(card, component) {
   return {
     ...card,
     component,
+    relic: component ? false : card.relic,
+    circles: card.circles,
+  };
+}
+
+export function setRelic(card, relic) {
+  return {
+    ...card,
+    relic,
+    component: relic ? false : card.component,
     circles: card.circles,
   };
 }
@@ -66,6 +88,7 @@ export const copyCard = (card) => ({
   ...card,
   circles: card.circles.map((circle) => ({ ...circle })),
   ...(card.attachables === undefined ? {} : { attachables: { ...card.attachables } }),
+  ...(card.relicText === undefined ? {} : { relicText: { ...card.relicText } }),
 });
 export const copyPage = (page) => ({ ...page, name: `${page.name} (copy)`, cards: page.cards.map(copyCard) });
 
@@ -92,9 +115,10 @@ function validateCards(cards) {
     throw new Error(`Each page must contain exactly ${CARD_COUNT} cards.`);
   }
   return cards.map((card, index) => {
-    const invalid = () => new Error(`Card ${index + 1} has invalid data. Use text fields, a supported tribe, a Component toggle, a cost from 3-6, and up to ${MAX_CIRCLES} circles containing empty, a tribe, equal, or asterisk.`);
+    const invalid = () => new Error(`Card ${index + 1} has invalid data. Use text fields, a supported tribe, Component/Relic toggles, a cost from 3-6, and up to ${MAX_CIRCLES} circles containing empty, a tribe, equal, or asterisk.`);
     if (!card || typeof card.title !== "string" || !TRIBES.includes(card.tribe) ||
         typeof card.keywords !== "string" || typeof card.component !== "boolean" ||
+        (card.relic !== undefined && typeof card.relic !== "boolean") ||
         !Number.isInteger(card.cost) || card.cost < 3 || card.cost > 6 ||
         !Array.isArray(card.circles) || card.circles.length > MAX_CIRCLES) throw invalid();
     const circles = card.circles.map((circle, circleIndex) => {
@@ -108,6 +132,11 @@ function validateCards(cards) {
         (!card.attachables || typeof card.attachables !== "object" || Array.isArray(card.attachables) ||
         ATTACHABLE_SLOTS.some((slot) => typeof card.attachables[slot] !== "string"))) {
       throw new Error(`Card ${index + 1} has invalid Attachables. Left, right, and bottom must be text.`);
+    }
+    if (card.relicText !== undefined &&
+        (!card.relicText || typeof card.relicText !== "object" || Array.isArray(card.relicText) ||
+        RELIC_SECTIONS.some((section) => typeof card.relicText[section] !== "string"))) {
+      throw new Error(`Card ${index + 1} has invalid Relic text. Top, middle, and bottom must be text.`);
     }
     return {
       ...card,

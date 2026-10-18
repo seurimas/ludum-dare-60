@@ -63,6 +63,14 @@ and no **1 tribe** / **2 tribe** shortcuts. The saved cost is retained when
 switching tribes; general circle editing and non-tribe shortcuts remain available.
 Starter does not add cards to the initial spread or to the energy set.
 
+**Omni** is another additional tribe choice. It keeps the normal 3-6 cost
+selector, but prints its cost as one circle of each symbol tribe (Yonar,
+Tiltch, Naxatu) followed by empty circles for any cost above 3 (so a cost of 3
+prints exactly the three tribe symbols, a cost of 6 adds three empty circles
+after them). It has no **1 tribe** / **2 tribe** shortcuts, since there is no
+single tribe symbol to use. Omni does not add cards to the initial spread or
+to the energy set.
+
 Non-component cards also have three **Attachables** text slots: left, right, and
 bottom. Each nonempty slot prints an outlined half ellipse (0.45 in deep, 1.4 in
 along the edge) with its flat side on the card edge and 16 px text inside it (up
@@ -79,6 +87,18 @@ Attachables are hidden (not deleted) for components. Existing saves without this
 optional field load unchanged; backups and print snapshots retain it.
 Old color edge labels, watermarks, cost rectangles, and automatic power symbols
 are removed.
+
+### Relics
+
+Toggle **Relic** in the editor for a third card type, mutually exclusive with
+**Component** (turning one on turns the other off). Relic cards stay upright in
+the same cut outline and keep their Name, but hide Tribe, Cost, Attachables, and
+Circles. The content area is split into three fixed, equal thirds - top, middle,
+and bottom - each with its own free-text box above a centered, fixed row of
+unlabeled 8 mm square boxes: 3 boxes on top, 3 in the middle, and 4 on the
+bottom. The boxes carry no data and are not editable; they are always that
+count. Hidden tribe, cost, attachable, and circle values are retained when
+switching away from Relic.
 
 ### Components and circles
 

@@ -1,0 +1,124 @@
+{
+  "version": 6,
+  "pages": [
+    {
+      "name": "Relics",
+      "cards": [
+        {
+          "title": "Endless Unity (Yonar)",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "relic": true,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          },
+          "relicText": {
+            "top": "Complete, at the start of C.o.G. player turn:\nDiscard a card from the energy deck. Rayguns cannot be shot with that energy.",
+            "middle": "Complete:\nThe discarded energy above is now the ONLY energy that rayguns can shoot with.",
+            "bottom": "When completed, peace reigns across the galaxy. All are one. Forever."
+          }
+        },
+        {
+          "title": "Reality Collider (Naxatu)",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "relic": true,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          },
+          "relicText": {
+            "top": "Complete, and C.o.G. is occupied:\nIf you are not in the C.o.G., you only play 2 cards from hand. Discard or draw to 5 still.",
+            "middle": "Complete, and C.o.G. is occupied:\nIf you are not in the C.o.G., you only draw 2 cards from hand. Discard or draw to 5 still.",
+            "bottom": "When completed, this reality has merged permanently with the next. And the next. And the next."
+          }
+        },
+        {
+          "title": "Fusion Sucker (Tiltch)",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "relic": true,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          },
+          "relicText": {
+            "top": "Completed:\nPlayers in C.o.G. take 1 less damage from all sources.",
+            "middle": "Completed:\nPlayers in C.o.G. take 1 less damage (2 less total) from all sources.",
+            "bottom": "When completed, this device acquires all fusion energy from the galaxy. Stars blink out. The fire of the galaxy is extinguished."
+          }
+        },
+        {
+          "title": "",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "relic": false,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          },
+          "relicText": {
+            "top": "",
+            "middle": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "relic": false,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          },
+          "relicText": {
+            "top": "",
+            "middle": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "relic": false,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          },
+          "relicText": {
+            "top": "",
+            "middle": "",
+            "bottom": ""
+          }
+        }
+      ]
+    }
+  ]
+}

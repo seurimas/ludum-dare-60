@@ -1,5 +1,5 @@
 import React from "react";
-import { blankCircle, CIRCLE_CONTENTS, MAX_CIRCLES, CIRCLE_SHORTCUTS, applyCircleShortcut } from "./cards.js";
+import { blankCircle, CIRCLE_CONTENTS, MAX_CIRCLES, CIRCLE_SHORTCUTS, NO_TRIBE_SHORTCUT_TRIBES, applyCircleShortcut } from "./cards.js";
 import CircleSymbol from "./CircleSymbol.jsx";
 
 const labels = { empty: "Empty", equal: "Equal (=)", asterisk: "Asterisk (*)" };
@@ -10,7 +10,7 @@ export default function CircleEditor({ circles, tribe, locked = false, onChange 
       <legend>Circles ({circles.length}/{MAX_CIRCLES})</legend>
       <div className="circle-presets" role="group" aria-label="Circle shortcuts">
         {CIRCLE_SHORTCUTS.map((name) => (
-          <button key={name} type="button" disabled={(name === "special" && circles.length === 0) || (locked && name !== "special") || (tribe === "Starter" && name.endsWith("tribe"))}
+          <button key={name} type="button" disabled={(name === "special" && circles.length === 0) || (locked && name !== "special") || (NO_TRIBE_SHORTCUT_TRIBES.includes(tribe) && name.endsWith("tribe"))}
             onClick={() => onChange(applyCircleShortcut(name, circles, tribe))}>{name}</button>
         ))}
       </div>
@@ -27,7 +27,7 @@ export default function CircleEditor({ circles, tribe, locked = false, onChange 
       ))}
       <button type="button" disabled={locked || circles.length >= MAX_CIRCLES} onClick={() => onChange([...circles, blankCircle()])}>+ Add circle</button>
       {locked && <p className="hint">This card has side markers, so circles can't be added. Clear the left and right attachables to use circles.</p>}
-      <p className="hint">Circles print at 2 cm diameter and wrap as needed. {tribe === "Starter" ? "Starter has no tribe shortcuts." : `Tribe shortcuts use ${tribe}.`} Special changes all current circles to asterisks.</p>
+      <p className="hint">Circles print at 2 cm diameter and wrap as needed. {NO_TRIBE_SHORTCUT_TRIBES.includes(tribe) ? `${tribe} has no tribe shortcuts.` : `Tribe shortcuts use ${tribe}.`} Special changes all current circles to asterisks.</p>
     </fieldset>
   );
 }

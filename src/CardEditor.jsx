@@ -1,5 +1,5 @@
 import React from "react";
-import { ATTACHABLE_SLOTS, blankAttachables, CARD_COUNT, TRIBES, hasCircleSideConflict, hasSideAttachables, setComponent } from "./cards.js";
+import { ATTACHABLE_SLOTS, blankAttachables, blankRelicText, CARD_COUNT, TRIBES, NO_COST_SELECTOR_TRIBES, RELIC_SECTIONS, RELIC_BOX_COUNTS, hasCircleSideConflict, hasSideAttachables, setComponent, setRelic } from "./cards.js";
 import CircleEditor from "./CircleEditor.jsx";
 
 export default function CardEditor({ card, selected, onSelect, onChange, onCopy, onClear, saveStatus }) {
@@ -23,25 +23,43 @@ export default function CardEditor({ card, selected, onSelect, onChange, onCopy,
           Component
         </label>
       </div>
-      {!card.component && <>
+      <div className="field">
+        <label className="component-toggle">
+          <input type="checkbox" checked={!!card.relic} onChange={(event) => onChange(setRelic(card, event.target.checked))} />
+          Relic
+        </label>
+      </div>
+      {!card.component && !card.relic && <>
         <div className="field">
           <label htmlFor="tribe">Tribe</label>
           <select id="tribe" value={card.tribe} onChange={(event) => onChange({ tribe: event.target.value })}>
             {TRIBES.map((tribe) => <option key={tribe}>{tribe}</option>)}
           </select>
         </div>
-        {card.tribe !== "Starter" && <div className="field">
-          <label htmlFor="card-cost">Cost (tribe symbols)</label>
+        {!NO_COST_SELECTOR_TRIBES.includes(card.tribe) && <div className="field">
+          <label htmlFor="card-cost">Cost ({card.tribe === "Omni" ? "1 of each tribe + empty" : "tribe symbols"})</label>
           <select id="card-cost" value={card.cost} onChange={(event) => onChange({ cost: Number(event.target.value) })}>
             {[3, 4, 5, 6].map((cost) => <option key={cost} value={cost}>{cost}</option>)}
           </select>
         </div>}
+        {card.tribe === "Omni" && <p className="hint">Omni always includes 1 circle of each tribe; any cost above 3 adds empty circles.</p>}
       </>}
-      <div className="field">
+      {!card.relic && <div className="field">
         <label htmlFor="keywords">Text{card.component ? " (optional)" : ""}</label>
         <textarea id="keywords" placeholder={card.component ? "Optional component text" : "Rules or other text"} value={card.keywords} onChange={(event) => onChange({ keywords: event.target.value })} />
-      </div>
-      {!card.component && <>
+      </div>}
+      {card.relic && <fieldset>
+        <legend>Relic sections</legend>
+        {RELIC_SECTIONS.map((section) => (
+          <div className="field" key={section}>
+            <label htmlFor={`relic-${section}`}>{section[0].toUpperCase() + section.slice(1)} text ({RELIC_BOX_COUNTS[section]} boxes)</label>
+            <textarea id={`relic-${section}`} value={card.relicText?.[section] ?? ""} onChange={(event) => onChange({
+              relicText: { ...(card.relicText ?? blankRelicText()), [section]: event.target.value },
+            })} />
+          </div>
+        ))}
+      </fieldset>}
+      {!card.component && !card.relic && <>
         <fieldset>
           <legend>Attachables</legend>
           {ATTACHABLE_SLOTS.map((slot) => {
@@ -64,8 +82,9 @@ export default function CardEditor({ card, selected, onSelect, onChange, onCopy,
           {TRIBES.map((tribe) => <option key={tribe}>{tribe}</option>)}
         </select>
       </div>}
-      <CircleEditor circles={card.circles} tribe={card.tribe} locked={hasSideAttachables(card)} onChange={(circles) => onChange({ circles })} />
+      {!card.relic && <CircleEditor circles={card.circles} tribe={card.tribe} locked={hasSideAttachables(card)} onChange={(circles) => onChange({ circles })} />}
       {card.component && <p className="hint">Landscape content in the same portrait cut outline. Tribe, cost, and attachables are hidden; their values are kept when switching back.</p>}
+      {card.relic && <p className="hint">Relic cards stay upright, split into fixed top/middle/bottom sections with 3, 3, and 4 unlabeled boxes. Tribe, cost, attachables, and circles are hidden; their values are kept when switching back.</p>}
       <div className="actions">
         <button type="button" disabled={selected === CARD_COUNT - 1} onClick={onCopy}>Copy to next card</button>
         <button type="button" onClick={onClear}>Clear card</button>

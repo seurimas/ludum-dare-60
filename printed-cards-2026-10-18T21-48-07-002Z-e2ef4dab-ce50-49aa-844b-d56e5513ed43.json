@@ -1,0 +1,1060 @@
+{
+  "version": 6,
+  "pages": [
+    {
+      "name": "Yonar A",
+      "cards": [
+        {
+          "title": "Yonar Pulsar",
+          "tribe": "Yonar",
+          "keywords": "When a raygun shoots at you, you MUST spend this energy.\n\nIf you do, cut the damage in half, rounded up.",
+          "component": false,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Yonar"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": "Ion Scoop"
+          }
+        },
+        {
+          "title": "Yonar Pulsar",
+          "tribe": "Yonar",
+          "keywords": "When a raygun shoots at you, you MUST spend this energy.\n\nIf you do, cut the damage in half, rounded up.",
+          "component": false,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Yonar"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": "Ion Scoop"
+          }
+        },
+        {
+          "title": "Yonar Pulsar",
+          "tribe": "Yonar",
+          "keywords": "When a raygun shoots at you, you MUST spend this energy.\n\nIf you do, cut the damage in half, rounded up.",
+          "component": false,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Yonar"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": "Ion Scoop"
+          }
+        },
+        {
+          "title": "Yonar Confuser",
+          "tribe": "Yonar",
+          "keywords": "Spend 1 energy to pick a target:\n- Target loses one stored energy on a device of your choice.\n- Target may choose to lose 3 health instead",
+          "component": false,
+          "cost": 4,
+          "circles": [
+            {
+              "content": "Yonar"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": "Ion Relay"
+          }
+        },
+        {
+          "title": "Minor Yonar Staff",
+          "tribe": "Yonar",
+          "keywords": "At the start of your turn, add a Yonar energy to this artifact.\n\nEnergy on this artifact can be used to advance the Yonar Magnum Opus.",
+          "component": false,
+          "cost": 4,
+          "circles": [
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Yonar"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Yonar Vitalis",
+          "tribe": "Yonar",
+          "keywords": "Once per turn, choose another player:\n- That player may discard a Yonar energy from hand.\n- If they do not, they discard their entire hand.",
+          "component": false,
+          "cost": 5,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "Ion Gatherer",
+            "bottom": "Rebreather"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Yonar B/Tiltch A",
+      "cards": [
+        {
+          "title": "Yonar Staff ",
+          "tribe": "Yonar",
+          "keywords": "At the start of your turn, add a Yonar energy to this artifact.\n\nEnergy on this artifact can be used to advance the Yonar Magnum Opus.",
+          "component": false,
+          "cost": 5,
+          "circles": [
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Yonar"
+            }
+          ]
+        },
+        {
+          "title": "Dominator",
+          "tribe": "Yonar",
+          "keywords": "Spend 9 energy to take control of another player's device this turn. You may use it as if it were yours and spend any connected energy.",
+          "component": false,
+          "cost": 6,
+          "circles": [],
+          "attachables": {
+            "left": "Dominion Cell",
+            "right": "Dominion Cell",
+            "bottom": "Dominion Cell"
+          }
+        },
+        {
+          "title": "Tiltch Cell",
+          "tribe": "Tiltch",
+          "keywords": "This must be attached to a Raygun.\n\nYou may store any energy on this card.\n\nAt the start of your turn, discard an energy from the deck. If it has Tiltch energy, add one to this card.\n\nEnergy stored on this card can be spent to fire the connected raygun.",
+          "component": false,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "empty"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Tiltch Cell",
+          "tribe": "Tiltch",
+          "keywords": "This must be attached to a Raygun.\n\nYou may store any energy on this card.\n\nAt the start of your turn, discard an energy from the deck. If it has Tiltch energy, add one to this card.\n\nEnergy stored on this card can be spent to fire the connected raygun.",
+          "component": false,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "empty"
+            }
+          ]
+        },
+        {
+          "title": "Tiltch Cell",
+          "tribe": "Tiltch",
+          "keywords": "This must be attached to a Raygun.\n\nYou may store any energy on this card.\n\nAt the start of your turn, discard an energy from the deck. If it has Tiltch energy, add one to this card.\n\nEnergy stored on this card can be spent to fire the connected raygun.",
+          "component": false,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "empty"
+            }
+          ]
+        },
+        {
+          "title": "Tiltch Akimbo",
+          "tribe": "Tiltch",
+          "keywords": "Spend any connected energy to shoot a target.\n\nDamage: 3 / 5 / 7",
+          "component": false,
+          "cost": 4,
+          "circles": [
+            {
+              "content": "Tiltch"
+            },
+            {
+              "content": "Tiltch"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": "Improvised Adapter"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tiltch B/Naxatu A",
+      "cards": [
+        {
+          "title": "Minor Tiltch Staff",
+          "tribe": "Tiltch",
+          "keywords": "At the start of your turn, add a Tiltch energy to this artifact.\n\nEnergy on this artifact can be used to advance the Tiltch Magnum Opus.",
+          "component": false,
+          "cost": 4,
+          "circles": [
+            {
+              "content": "Tiltch"
+            },
+            {
+              "content": "Tiltch"
+            }
+          ]
+        },
+        {
+          "title": "Tiltch Emitter",
+          "tribe": "Tiltch",
+          "keywords": "At the start of your turn, draw an energy. Use that energy to charge a Tiltch Cell, Tiltch Akimbo, or raygun of your choice.",
+          "component": false,
+          "cost": 5,
+          "circles": []
+        },
+        {
+          "title": "Tiltch Staff",
+          "tribe": "Tiltch",
+          "keywords": "At the start of your turn, add a Tiltch energy to this artifact.\n \nEnergy on this artifact can be used to advance the Tiltch Magnum Opus.",
+          "component": false,
+          "cost": 5,
+          "circles": [
+            {
+              "content": "Tiltch"
+            },
+            {
+              "content": "Tiltch"
+            },
+            {
+              "content": "Tiltch"
+            }
+          ]
+        },
+        {
+          "title": "Doomsdayer",
+          "tribe": "Tiltch",
+          "keywords": "Spend 6 energy to deal 8 damage to all other players.",
+          "component": false,
+          "cost": 6,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "Massive Powercell",
+            "bottom": "Energy Scoop"
+          }
+        },
+        {
+          "title": "Naxatu Assembly",
+          "tribe": "Naxatu",
+          "keywords": "Spend 1 to create one energy of your choice.",
+          "component": false,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Naxatu"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": "Quantum Duplicator"
+          }
+        },
+        {
+          "title": "Naxatu Assembly",
+          "tribe": "Naxatu",
+          "keywords": "Spend 1 to create one energy of your choice.",
+          "component": false,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Naxatu"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": "Quantum Duplicator"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Naxatu B",
+      "cards": [
+        {
+          "title": "Naxatu Assembly",
+          "tribe": "Naxatu",
+          "keywords": "Spend 1 to create one energy of your choice.",
+          "component": false,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Naxatu"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": "Quantum Duplicator"
+          }
+        },
+        {
+          "title": "Naxatu Redeather",
+          "tribe": "Naxatu",
+          "keywords": "Spend 3 to deal 3 damage and heal 3.",
+          "component": false,
+          "cost": 4,
+          "circles": [
+            {
+              "content": "Naxatu"
+            },
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Tiltch"
+            }
+          ]
+        },
+        {
+          "title": "Minor Naxan Star",
+          "tribe": "Naxatu",
+          "keywords": "At the start of your turn, add a Naxatu energy to this artifact.\n\nEnergy on this artifact can be used to advance the Naxatu Magnum Opus.",
+          "component": false,
+          "cost": 4,
+          "circles": [
+            {
+              "content": "Naxatu"
+            },
+            {
+              "content": "Naxatu"
+            }
+          ]
+        },
+        {
+          "title": "Naxatu Shifter",
+          "tribe": "Naxatu",
+          "keywords": "At the start of your turn, choose an energy on any other player's device. Either:\n* That player discards TWO energy match that one from their hand.\n- OR -\n* Move that energy to one of your devices.",
+          "component": false,
+          "cost": 5,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Naxan Star",
+          "tribe": "Naxatu",
+          "keywords": "At the start of your turn, add a Naxatu energy to this artifact.\n\nEnergy on this artifact can be used to advance the Naxatu Magnum Opus.",
+          "component": false,
+          "cost": 5,
+          "circles": [
+            {
+              "content": "Naxatu"
+            },
+            {
+              "content": "Naxatu"
+            },
+            {
+              "content": "Naxatu"
+            }
+          ]
+        },
+        {
+          "title": "Dimensional Harmonizer",
+          "tribe": "Naxatu",
+          "keywords": "Spend 6 while in the Center of the Galaxy to:\n* temporarily increase the level of two relics by one\n   OR\n* temporarily increase the level of one relic by two",
+          "component": false,
+          "cost": 6,
+          "circles": [],
+          "attachables": {
+            "left": "Elder Cell",
+            "right": "Elder Cell",
+            "bottom": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Starters",
+      "cards": [
+        {
+          "title": "Raygun",
+          "tribe": "Starter",
+          "keywords": "Primary Action - Expend matching energy to shoot a target.\n\nDamage: 2 / 3 / 5 / 7",
+          "component": false,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "equal"
+            },
+            {
+              "content": "equal"
+            },
+            {
+              "content": "equal"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": "Standard Powercell*"
+          }
+        },
+        {
+          "title": "Standard Powercell",
+          "tribe": "Starter",
+          "keywords": "May store any energy. The stored energy must match any other spent energy when shooting your raygun.",
+          "component": true,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "empty"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": "Tiltch Cell*"
+          }
+        },
+        {
+          "title": "HEV Suit",
+          "tribe": "Starter",
+          "keywords": "Spend 3 to:\n* heal 3 while not in C.o.G..\n- OR -\n* Journey to C.o.G.. End your turn.",
+          "component": false,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Tiltch"
+            },
+            {
+              "content": "Naxatu"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": "Bioreactor"
+          }
+        },
+        {
+          "title": "Toolbox",
+          "tribe": "Starter",
+          "keywords": "You may store any energy here.\n\nEnergy stored here can be spent as if from your hand.",
+          "component": false,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "empty"
+            },
+            {
+              "content": "empty"
+            },
+            {
+              "content": "empty"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": "Big Pockets"
+          }
+        },
+        {
+          "title": "Big Pockets",
+          "tribe": "Starter",
+          "keywords": "You may store any energy here.\n\nEnergy stored here can be spent as if from your hand.\n\nYour hand size is now 6 instead of 5.",
+          "component": true,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "empty"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Bioreactor",
+          "tribe": "Starter",
+          "keywords": "At the start of your turn, discard from the top of the deck. Add a matching energy to your HEV suit.",
+          "component": true,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Components (Yonar)",
+      "cards": [
+        {
+          "title": "Ion Relay (Yonar Confuser)",
+          "tribe": "Yonar",
+          "keywords": "When the target of this device DOES NOT take damage:\n\n* Charge a Yonar Staff or Minor Yonar Staff.\n- OR -\n* Charge a Dominator.\n- OR -\n* Charge a Yonar Vitalis",
+          "component": true,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Ion Gatherer (Yonar Vitalis)",
+          "tribe": "Yonar",
+          "keywords": "When a player chooses to discard a single Yonar energy:\n\n* Charge this card once.",
+          "component": true,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Yonar"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Rebreather (Yonar Vitalis)",
+          "tribe": "Yonar",
+          "keywords": "You may spend 3 connected energy to heal 5.",
+          "component": true,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Ion Scoop (Yonar Pulsar)",
+          "tribe": "Yonar",
+          "keywords": "When you block a raygun shot:\n\n* Charge a Yonar Staff or Minor Yonar Staff.\n- OR -\n* Charge a Dominator.\n- OR -\n* Charge a Yonar Vitalis.",
+          "component": true,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Ion Scoop (Yonar Pulsar)",
+          "tribe": "Yonar",
+          "keywords": "When you block a raygun shot:\n\n* Charge a Yonar Staff or Minor Yonar Staff.\n- OR -\n* Charge a Dominator.\n- OR -\n* Charge a Yonar Vitalis.",
+          "component": true,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Ion Scoop (Yonar Pulsar)",
+          "tribe": "Yonar",
+          "keywords": "When you block a raygun shot:\n\n* Charge a Yonar Staff or Minor Yonar Staff.\n- OR -\n* Charge a Dominator.\n- OR -\n* Charge a Yonar Vitalis.",
+          "component": true,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Components (Tiltch)",
+      "cards": [
+        {
+          "title": "Standard Powercell (Doomsdayer)",
+          "tribe": "Tiltch",
+          "keywords": "",
+          "component": true,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Tiltch"
+            },
+            {
+              "content": "Tiltch"
+            },
+            {
+              "content": "Tiltch"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Standard Powercell (Doomsdayer)",
+          "tribe": "Tiltch",
+          "keywords": "",
+          "component": true,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Tiltch"
+            },
+            {
+              "content": "Tiltch"
+            },
+            {
+              "content": "Tiltch"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Energy Scoop (Doomsdayer)",
+          "tribe": "Yonar",
+          "keywords": "You may spend energy from your rayguns, Tiltch Cells, or Tiltch Akimbo for this artifact.",
+          "component": true,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Improvised Adapter (Tiltch Akimbo)",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": true,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "empty"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Components (Naxatu)",
+      "cards": [
+        {
+          "title": "Omnix",
+          "tribe": "Omni",
+          "keywords": "You may spend 1 to peek at the top card of the artifact deck.\n\nOn your turn, you may choose to swap this with the top card of the artifact deck.",
+          "component": false,
+          "cost": 4,
+          "circles": [
+            {
+              "content": "empty"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Elder Cell (Dimensional Harmonizer)",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": true,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Tiltch"
+            },
+            {
+              "content": "Naxatu"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Elder Cell (Dimensional Harmonizer)",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": true,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Tiltch"
+            },
+            {
+              "content": "Naxatu"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Quantum Duplicator (Naxatu Assembly)",
+          "tribe": "Yonar",
+          "keywords": "When you create either Yonar or Tiltch energy, create the other one as well.",
+          "component": true,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Quantum Duplicator (Naxatu Assembly)",
+          "tribe": "Yonar",
+          "keywords": "When you create either Yonar or Tiltch energy, create the other one as well.",
+          "component": true,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Quantum Duplicator (Naxatu Assembly)",
+          "tribe": "Yonar",
+          "keywords": "When you create either Yonar or Tiltch energy, create the other one as well.",
+          "component": true,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dominator",
+      "cards": [
+        {
+          "title": "Dominator Cell (Dominator)",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": true,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Yonar"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Dominator Cell (Dominator)",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": true,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Yonar"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Dominator Cell (Dominator)",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": true,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Yonar"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "Relics",
+      "cards": [
+        {
+          "title": "Endless Unity (Yonar)",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "relic": true,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          },
+          "relicText": {
+            "top": "Completed or on entering while complete:\nDiscard an energy card from deck. Rayguns CANNOT shoot with that energy.",
+            "middle": "While completed:\nThe discarded energy above is now the ONLY energy that rayguns can shoot with.",
+            "bottom": "When completed, peace reigns across the galaxy. All are one. Forever."
+          }
+        },
+        {
+          "title": "Reality Collider (Naxatu)",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "relic": true,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          },
+          "relicText": {
+            "top": "While completed and C.o.G. is occupied:\nIf you are not in the C.o.G., you only PLAY 2 cards from hand. Discard or draw to 5.",
+            "middle": "While completed and C.o.G. is occupied:\nIf you are not in the C.o.G., you only DRAW 2 cards. Discard or draw to 5.",
+            "bottom": "When completed, this reality has merged permanently with the next. And the next. And the next."
+          }
+        },
+        {
+          "title": "Fusion Sucker (Tiltch)",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "relic": true,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          },
+          "relicText": {
+            "top": "While completed:\nPlayers in C.o.G. take 1 less damage from all sources.",
+            "middle": "While completed:\nPlayers in C.o.G. take 1 less damage (2 less total) from all sources.",
+            "bottom": "When completed, this device acquires all fusion energy from the galaxy. Stars blink out. The fire of the galaxy is extinguished."
+          }
+        },
+        {
+          "title": "",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "relic": false,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          },
+          "relicText": {
+            "top": "",
+            "middle": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "relic": false,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          },
+          "relicText": {
+            "top": "",
+            "middle": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "relic": false,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          },
+          "relicText": {
+            "top": "",
+            "middle": "",
+            "bottom": ""
+          }
+        }
+      ]
+    }
+  ]
+}

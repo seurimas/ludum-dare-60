@@ -1,0 +1,118 @@
+{
+  "version": 6,
+  "pages": [
+    {
+      "name": "Dominator",
+      "cards": [
+        {
+          "title": "Dominator Cell (Dominator)",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": true,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Yonar"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Dominator Cell (Dominator)",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": true,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Yonar"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Dominator Cell (Dominator)",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": true,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Yonar"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "",
+          "tribe": "Yonar",
+          "keywords": "",
+          "component": false,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        }
+      ]
+    }
+  ]
+}

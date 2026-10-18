@@ -3,8 +3,9 @@ import test from "node:test";
 import { createCardStore } from "./cardStorage.js";
 import {
   TRIBES, SYMBOL_TRIBES, STORAGE_KEY, blankSheet, blankPage, blankCircle, copyCard, copyPage,
-  CIRCLE_CONTENTS, applyCircleShortcut, createInitialPages, serializeBackup, validateBackup, setComponent,
-  hasSideAttachables, hasCircleSideConflict,
+  CIRCLE_CONTENTS, applyCircleShortcut, createInitialPages, serializeBackup, validateBackup, setComponent, setRelic,
+  hasSideAttachables, hasCircleSideConflict, NO_COST_SELECTOR_TRIBES, NO_TRIBE_SHORTCUT_TRIBES,
+  RELIC_SECTIONS, RELIC_BOX_COUNTS,
 } from "./cards.js";
 
 test("side markers and circles are mutually exclusive without making existing saves invalid", () => {
@@ -130,7 +131,7 @@ test("four full sheets contain 24 named cards with the exact cost spread per tri
   assert.ok(pages.every((page) => page.cards.length === 6));
   const cards = pages.flatMap((page) => page.cards);
   assert.equal(cards.length, 24);
-  assert.deepEqual(TRIBES, ["Yonar", "Tiltch", "Naxatu", "Starter"]);
+  assert.deepEqual(TRIBES, ["Yonar", "Tiltch", "Naxatu", "Starter", "Omni"]);
   for (const tribe of SYMBOL_TRIBES) {
     const group = cards.filter((card) => card.tribe === tribe);
     assert.deepEqual(group.map((card) => card.cost), [3, 3, 3, 4, 4, 5, 5, 6]);
@@ -164,6 +165,35 @@ test("component toggle preserves any circle count and hidden fields", () => {
   assert.equal(restored.cost, 6);
   assert.equal(restored.keywords, "Kept");
   assert.deepEqual(restored.circles, component.circles);
+});
+
+test("Relic and Component are mutually exclusive, and Relic sections round trip and stay optional", () => {
+  const original = { ...blankSheet()[0], title: "Test", tribe: "Naxatu", cost: 6, circles: [blankCircle()] };
+  const relic = setRelic(original, true);
+  assert.equal(relic.relic, true);
+  assert.equal(relic.component, false);
+  assert.equal(relic.circles.length, 1);
+  const madeComponent = setComponent(relic, true);
+  assert.equal(madeComponent.component, true);
+  assert.equal(madeComponent.relic, false);
+  const madeRelicAgain = setRelic(madeComponent, true);
+  assert.equal(madeRelicAgain.relic, true);
+  assert.equal(madeRelicAgain.component, false);
+  assert.deepEqual(RELIC_SECTIONS, ["top", "middle", "bottom"]);
+  assert.deepEqual(RELIC_BOX_COUNTS, { top: 3, middle: 3, bottom: 4 });
+  const withText = { ...relic, relicText: { top: "A", middle: "B", bottom: "C" } };
+  const pages = [{ ...blankPage(), cards: [withText, ...blankSheet().slice(1)] }];
+  const restored = validateBackup(JSON.parse(serializeBackup(pages)));
+  assert.deepEqual((restored.pages ?? restored)[0].cards[0], withText);
+  const copy = copyCard(withText);
+  copy.relicText.top = "Changed";
+  assert.equal(withText.relicText.top, "A");
+  // Existing saves made before Relic existed have neither field; they must stay valid and unchanged.
+  const legacy = [blankPage("Existing")];
+  delete legacy[0].cards[0].relic;
+  delete legacy[0].cards[0].relicText;
+  const raw = serializeBackup(legacy);
+  assert.deepEqual(validateBackup(JSON.parse(raw)), legacy);
 });
 
 test("version 6 backups round trip components, text and all circle contents", () => {
@@ -209,8 +239,21 @@ test("circle shortcuts replace counts and use the selected tribe, while special 
   assert.throws(() => applyCircleShortcut("1 tribe", [], "unknown"), /Unknown tribe/);
   for (const shortcut of ["1 tribe", "2 tribe"]) {
     assert.throws(() => applyCircleShortcut(shortcut, [], "Starter"), /Starter has no tribe/);
+    assert.throws(() => applyCircleShortcut(shortcut, [], "Omni"), /Omni has no tribe/);
   }
   assert.deepEqual(applyCircleShortcut("1 any", [], "Starter"), [blankCircle()]);
+});
+
+test("Omni keeps a 3-6 cost, has no tribe circle shortcuts, but does have a cost selector", () => {
+  const pages = [blankPage("Omni cards")];
+  const card = pages[0].cards[0];
+  card.tribe = "Omni";
+  card.cost = 5;
+  assert.deepEqual(validateBackup(JSON.parse(serializeBackup(pages))), pages);
+  assert.ok(TRIBES.includes("Omni"));
+  assert.ok(!SYMBOL_TRIBES.includes("Omni"));
+  assert.ok(!NO_COST_SELECTOR_TRIBES.includes("Omni"));
+  assert.ok(NO_TRIBE_SHORTCUT_TRIBES.includes("Omni"));
 });
 
 test("Starter and attachables round trip, including component-hidden values and independent copies", () => {

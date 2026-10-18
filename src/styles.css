@@ -69,6 +69,13 @@ select.page-tab { width: auto; max-width: 40%; }
 .card-attachable-right .card-attachable-text { right: .2in; top: 50%; transform: translate(50%, -50%) rotate(-90deg); }
 .card-attachable-bottom .card-attachable-text { left: 50%; top: calc(100% - .2in); transform: translate(-50%, -50%); }
 .component-card .card-content { inset: auto; left: 50%; top: 50%; width: calc(3.4in - 1pt); height: calc(2.4in - 1pt); transform: translate(-50%, -50%) rotate(90deg); }
+.relic-content { position: absolute; inset: 0; padding: .1in; display: flex; flex-direction: column; gap: .04in; }
+.relic-sections { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.relic-section { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: .06in 0; gap: .04in; }
+.relic-section-middle, .relic-section-bottom { border-top: .5pt solid #929292; }
+.relic-text { flex: 1; min-height: 0; font-size: 11px; line-height: 1.25; white-space: pre-wrap; overflow-wrap: anywhere; overflow: hidden; }
+.relic-boxes { display: flex; justify-content: center; gap: .06in; flex: 0 0 auto; }
+.relic-box { width: 8mm; height: 8mm; flex-shrink: 0; border: 1.2pt solid black; box-sizing: border-box; }
 .card.selected { outline: 3px solid #205fc7; outline-offset: -3px; }
 .card-heading { flex: 0 0 auto; display: flex; align-items: start; justify-content: space-between; gap: .04in; }
 .card-name { min-width: 0; }

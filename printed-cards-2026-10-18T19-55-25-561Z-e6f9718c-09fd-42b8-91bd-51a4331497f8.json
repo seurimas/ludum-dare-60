@@ -1,0 +1,126 @@
+{
+  "version": 6,
+  "pages": [
+    {
+      "name": "Starters",
+      "cards": [
+        {
+          "title": "Raygun",
+          "tribe": "Starter",
+          "keywords": "Primary Action - Expend matching energy to shoot a target.\n\nDamage: 2 / 3 / 5 / 7",
+          "component": false,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "equal"
+            },
+            {
+              "content": "equal"
+            },
+            {
+              "content": "equal"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": "Standard Powercell*"
+          }
+        },
+        {
+          "title": "Standard Powercell",
+          "tribe": "Starter",
+          "keywords": "May store any energy. The stored energy must match any other spent energy when shooting your raygun.",
+          "component": true,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "empty"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": "Tiltch Cell*"
+          }
+        },
+        {
+          "title": "HEV Suit",
+          "tribe": "Starter",
+          "keywords": "Spend 3 to:\n* heal 3 while not in C.o.G..\n- OR -\n* Journey to C.o.G.. End your turn.",
+          "component": false,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "Yonar"
+            },
+            {
+              "content": "Tiltch"
+            },
+            {
+              "content": "Naxatu"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": "Bioreactor"
+          }
+        },
+        {
+          "title": "Toolbox",
+          "tribe": "Starter",
+          "keywords": "You may store any energy here.\n\nEnergy stored here can be spent as if from your hand.",
+          "component": false,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "empty"
+            },
+            {
+              "content": "empty"
+            },
+            {
+              "content": "empty"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": "Big Pockets"
+          }
+        },
+        {
+          "title": "Big Pockets",
+          "tribe": "Starter",
+          "keywords": "You may store any energy here.\n\nEnergy stored here can be spent as if from your hand.\n\nYour hand size is now 6 instead of 5.",
+          "component": true,
+          "cost": 3,
+          "circles": [
+            {
+              "content": "empty"
+            }
+          ],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        },
+        {
+          "title": "Bioreactor",
+          "tribe": "Starter",
+          "keywords": "At the start of your turn, discard from the top of the deck. Add a matching energy to your HEV suit.",
+          "component": true,
+          "cost": 3,
+          "circles": [],
+          "attachables": {
+            "left": "",
+            "right": "",
+            "bottom": ""
+          }
+        }
+      ]
+    }
+  ]
+}
