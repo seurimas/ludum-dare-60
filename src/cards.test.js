@@ -1,162 +1,129 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { COLORS, blankSheet, blankPage, blankCircle, copyCard, copyPage, createCirclePreset, createInitialPages, serializeBackup, validateBackup } from "./cards.js";
+import {
+  TRIBES, STORAGE_KEY, blankSheet, blankPage, blankCircle, copyCard, copyPage,
+  createCirclePreset, createInitialPages, serializeBackup, validateBackup, setComponent,
+} from "./cards.js";
 
-test("initial pages have the exact requested colors, titles, tribe distributions and circles", () => {
+test("four full sheets contain 24 named cards with the exact cost spread per tribe", () => {
   const pages = createInitialPages();
-  const expected = [
-    ["Blue", "blue", "Replicators", { nomi: 3, runite: 2, nuke: 1 }],
-    ["Red", "red", "Assemblers", { runite: 4, nomi: 2 }],
-    ["Green", "green", "Reassemblers", { nuke: 3, nomi: 2, runite: 1 }],
-    ["Black", "black", "Pulsars", { nuke: 4, nomi: 1, runite: 1 }],
-    ["White", "white", "Adapters", { nomi: 2, runite: 2, nuke: 2 }],
-  ];
-  assert.equal(pages.length, 5);
-  expected.forEach(([name, color, role, counts], index) => {
-    const page = pages[index];
-    assert.equal(page.name, name);
-    assert.equal(page.cards.length, 6);
-    const actual = {};
-    page.cards.forEach((card) => {
-      actual[card.tribe] = (actual[card.tribe] || 0) + 1;
-      assert.equal(card.color, color);
-      assert.equal(card.title, `${card.tribe[0].toUpperCase() + card.tribe.slice(1)} ${role}`);
-      assert.ok([2, 3].includes(card.circles.length));
-      assert.deepEqual(card.circles[0], { value: 5, star: false, icon: null });
-      assert.deepEqual(card.costs, [{ color: "white", number: 1 }]);
-    });
-    assert.deepEqual(actual, counts);
-  });
+  assert.equal(pages.length, 4);
+  assert.ok(pages.every((page) => page.cards.length === 6));
+  const cards = pages.flatMap((page) => page.cards);
+  assert.equal(cards.length, 24);
+  assert.deepEqual(TRIBES, ["Yonar", "Tiltch", "Naxatu"]);
+  for (const tribe of TRIBES) {
+    const group = cards.filter((card) => card.tribe === tribe);
+    assert.deepEqual(group.map((card) => card.cost), [3, 3, 3, 4, 4, 5, 5, 6]);
+    assert.deepEqual(group.map((card) => card.title), Array.from({ length: 8 }, (_, i) => `${tribe} ${i + 1}`));
+  }
+  assert.ok(cards.every((card) => !card.component && card.keywords === "" && card.circles.length === 0));
   assert.deepEqual(validateBackup(JSON.parse(serializeBackup(pages))), pages);
 });
 
-test("initializing creates independent cards, circles, costs, and subsequent results", () => {
+test("blank and initialized cards and later generations are independent", () => {
   const pages = createInitialPages();
-  pages[0].cards[0].circles[0].value = 6;
-  pages[0].cards[0].circles[1].star = false;
-  pages[0].cards[0].costs[0].number = 9;
-  assert.equal(pages[0].cards[0].circles[2].star, true);
-  assert.equal(pages[0].cards[1].circles[1].star, true);
-  assert.equal(pages[0].cards[1].circles[0].value, 5);
-  assert.equal(pages[0].cards[1].costs[0].number, 1);
-  assert.deepEqual(createInitialPages()[0].cards[0].circles.map((circle) => circle.value), [5, 3, 2]);
+  pages[0].cards[0].circles.push(blankCircle());
+  pages[0].cards[0].title = "Changed";
+  assert.deepEqual(pages[0].cards[1].circles, []);
+  assert.equal(createInitialPages()[0].cards[0].title, "Yonar 1");
+  const cards = blankSheet();
+  assert.equal(cards.length, 6);
+  cards[0].circles.push(blankCircle());
+  assert.deepEqual(cards[1].circles, []);
 });
 
-test("every initial card has the exact requested configuration and decorations", () => {
-  const expected = {
-    Early: [
-      { value: 5, star: false, icon: null },
-      { value: 4, star: true, icon: "eye" },
-    ],
-    Late: [
-      { value: 5, star: false, icon: null },
-      { value: 3, star: true, icon: null },
-      { value: 2, star: true, icon: "eye" },
-    ],
-    Standard: [
-      { value: 5, star: false, icon: null },
-      { value: 3, star: true, icon: null },
-    ],
+test("component toggle adds at least three circles and preserves hidden fields and existing circles", () => {
+  const original = { ...blankSheet()[0], title: "Test", keywords: "Kept", tribe: "Naxatu", cost: 6, circles: [blankCircle()] };
+  const component = setComponent(original, true);
+  assert.equal(component.circles.length, 3);
+  assert.equal(original.circles.length, 1);
+  component.circles[1].value = 6;
+  assert.equal(component.circles[2].value, 2);
+  assert.equal(component.keywords, "Kept");
+  const restored = setComponent(component, false);
+  assert.equal(restored.component, false);
+  assert.equal(restored.tribe, "Naxatu");
+  assert.equal(restored.cost, 6);
+  assert.equal(restored.keywords, "Kept");
+  assert.deepEqual(restored.circles, component.circles);
+});
+
+test("version 6 backups round trip components, text and all circle decorations", () => {
+  assert.equal(STORAGE_KEY, "card-sheet-maker-v6");
+  const pages = [blankPage("Components"), blankPage("")];
+  pages[0].cards[0] = {
+    ...pages[0].cards[0], component: true, title: "Module", keywords: "Hidden text",
+    circles: Array.from({ length: 6 }, (_, index) => ({ value: 2 + index % 5, star: index % 2 === 0, icon: index % 2 ? "eye" : null })),
   };
-  const configurations = [
-    ["Late", "Late", "Standard", "Late", "Late", "Late"],
-    ["Late", "Late", "Standard", "Standard", "Standard", "Standard"],
-    ["Late", "Standard", "Standard", "Late", "Late", "Standard"],
-    ["Early", "Early", "Early", "Standard", "Early", "Early"],
-    ["Standard", "Standard", "Standard", "Standard", "Standard", "Standard"],
-  ];
-  createInitialPages().forEach((page, p) => page.cards.forEach((card, c) => {
-    const circles = expected[configurations[p][c]].map((circle) => page.name === "White" ? { ...circle, star: false } : circle);
-    assert.deepEqual(card.circles, circles, `${page.name}, card ${c + 1}`);
-    assert.ok(card.circles.every((circle) => typeof circle.value === "number"));
-  }));
-  for (const name of Object.keys(expected)) {
-    assert.deepEqual(createCirclePreset(name), expected[name]);
-    const changed = createCirclePreset(name);
-    changed[0].value = 2;
-    assert.deepEqual(createCirclePreset(name), expected[name]);
+  const backup = JSON.parse(serializeBackup(pages));
+  assert.equal(backup.version, 6);
+  assert.deepEqual(validateBackup(backup), pages);
+});
+
+test("copied cards and pages have independent circles and preserve component settings", () => {
+  const original = blankPage("Parts");
+  original.cards[0] = setComponent(original.cards[0], true);
+  const copy = copyPage(original);
+  assert.equal(copy.name, "Parts (copy)");
+  assert.equal(copy.cards[0].component, true);
+  copy.cards[0].circles[0].star = true;
+  assert.equal(original.cards[0].circles[0].star, false);
+  const card = copyCard(original.cards[0]);
+  card.circles[0].value = 6;
+  assert.equal(original.cards[0].circles[0].value, 2);
+});
+
+test("circle presets remain independent and unknown presets fail explicitly", () => {
+  for (const name of ["Early", "Late", "Standard"]) {
+    const preset = createCirclePreset(name);
+    const copy = createCirclePreset(name);
+    copy[0].value = 2;
+    assert.deepEqual(createCirclePreset(name), preset);
   }
   assert.throws(() => createCirclePreset("unknown"), /Unknown circle preset/);
 });
 
-test("blank sheets contain six independent cards with a default card color", () => {
-  const cards = blankSheet();
-  assert.equal(cards.length, 6);
-  assert.ok(cards.every((card) => card.color === "white"));
-  cards[0].costs[0].number = 2;
-  assert.equal(cards[1].costs[0].number, 1);
-});
-
-test("version 5 backups round trip all card colors, costs, and circle settings", () => {
-  const pages = [blankPage("Ember"), blankPage("Water"), blankPage("")];
-  [2, 3, 4, 5, 6].forEach((value, index) => {
-    pages[0].cards[index].color = COLORS[index % COLORS.length];
-    pages[0].cards[index].circles = [{ value, star: index % 2 === 0, icon: index % 2 ? "eye" : null }];
-    pages[0].cards[index].costs = COLORS.map((color, i) => ({ color, number: i ? 999 : 1 }));
-  });
-  const backup = JSON.parse(serializeBackup(pages));
-  assert.equal(backup.version, 5);
-  assert.deepEqual(validateBackup(backup), pages);
-});
-
-test("duplicated cards and pages have independent circles and costs and preserve color", () => {
-  const original = blankPage("Ember");
-  original.cards[0].color = "red";
-  original.cards[0].circles = [blankCircle()];
-  const copy = copyPage(original);
-  assert.equal(copy.name, "Ember (copy)");
-  assert.equal(copy.cards[0].color, "red");
-  copy.cards[0].title = "Changed";
-  copy.cards[0].costs[0].number = 3;
-  copy.cards[0].circles[0].star = true;
-  assert.equal(original.cards[0].title, "");
-  assert.equal(original.cards[0].costs[0].number, 1);
-  assert.equal(original.cards[0].circles[0].star, false);
-  const cardCopy = copyCard(original.cards[0]);
-  cardCopy.color = "blue";
-  assert.equal(original.cards[0].color, "red");
-});
-
-test("old formats and invalid pages are explicitly rejected", () => {
-  for (const data of [null, {}, ...[1, 2, 3, 4].map((version) => ({ version, pages: [blankPage()] })), { version: 5, pages: [] }]) {
-    assert.throws(() => validateBackup(data), /format version 5/);
+test("old formats, empty pages and invalid page sizes are rejected", () => {
+  for (const data of [null, {}, ...[1, 2, 3, 4, 5].map((version) => ({ version, pages: [blankPage()] })), { version: 6, pages: [] }]) {
+    assert.throws(() => validateBackup(data), /format version 6/);
   }
-  assert.throws(() => validateBackup({ version: 5, pages: [{ name: 123, cards: blankSheet() }] }), /text name/);
-  for (const count of [0, 5, 7, 12]) {
-    assert.throws(() => validateBackup({
-      version: 5, pages: [{ name: "Wrong size", cards: Array.from({ length: count }, () => blankSheet()[0]) }],
-    }), /exactly 6 cards/);
+  assert.throws(() => validateBackup({ version: 6, pages: [{ name: 1, cards: blankSheet() }] }), /text name/);
+  for (const length of [0, 5, 7, 24]) {
+    assert.throws(() => validateBackup({ version: 6, pages: [{ name: "", cards: Array.from({ length }, () => blankSheet()[0]) }] }), /exactly 6 cards/);
   }
 });
 
-test("invalid card and cost data is rejected", () => {
+test("invalid card fields, costs, tribes and component circle counts are rejected", () => {
   for (const patch of [
-    { title: null }, { tribe: 2 }, { keywords: [] },
-    { color: "purple" }, { color: null }, { color: undefined },
-    { costs: [] }, { costs: Array(6).fill({ color: "red", number: 1 }) },
-    { costs: [null] }, { costs: [{ color: "purple", number: 1 }] },
-    ...[0, 1000, 1.5, "2", null].map((number) => ({ costs: [{ color: "red", number }] })),
+    { title: null }, { keywords: [] }, { tribe: "nomi" }, { tribe: null },
+    { component: "true" }, { component: true }, { component: undefined },
+    ...[2, 7, 3.5, "3", null].map((cost) => ({ cost })),
+    { component: true, circles: [blankCircle(), blankCircle()] },
   ]) {
     const pages = [blankPage()];
-    pages[0].cards[0] = { ...pages[0].cards[0], ...patch };
-    assert.throws(() => validateBackup({ version: 5, pages }), /Page 1: Card 1 has invalid data/);
+    Object.assign(pages[0].cards[0], patch);
+    assert.throws(() => validateBackup({ version: 6, pages }), /Page 1: Card 1 has invalid data/);
   }
 });
 
-test("invalid circle values, decorations, and counts are rejected", () => {
+test("circle validation accepts zero to six circles and requires supported values and decorations", () => {
   for (const circles of [
-    2, null, {}, ...[4, 5, 6].map((length) => Array.from({ length }, blankCircle)), [null],
-    ...[null, 1, 7, "2", "power", "unknown"].map((value) => [{ ...blankCircle(), value }]),
-    [{ ...blankCircle(), star: "true" }], [{ ...blankCircle(), icon: "unknown" }],
-    [{ value: 2 }], [{ ...blankCircle(), icon: false }],
+    null, {}, [null], Array.from({ length: 7 }, blankCircle),
+    ...[null, 1, 7, "2", "power"].map((value) => [{ ...blankCircle(), value }]),
+    [{ ...blankCircle(), star: "true" }], [{ ...blankCircle(), icon: "unknown" }], [{ value: 2 }],
   ]) {
     const pages = [blankPage()];
     pages[0].cards[0].circles = circles;
-    assert.throws(() => validateBackup({ version: 5, pages }), /Card 1 has invalid data/);
+    assert.throws(() => validateBackup({ version: 6, pages }), /invalid data/);
   }
-  for (let count = 0; count <= 3; count++) {
+  for (let count = 0; count <= 6; count++) {
     const pages = [blankPage()];
     pages[0].cards[0].circles = Array.from({ length: count }, blankCircle);
-    assert.deepEqual(validateBackup({ version: 5, pages }), pages);
+    assert.deepEqual(validateBackup({ version: 6, pages }), pages);
+    if (count >= 3) {
+      pages[0].cards[0].component = true;
+      assert.deepEqual(validateBackup({ version: 6, pages }), pages);
+    }
   }
 });

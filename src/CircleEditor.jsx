@@ -2,14 +2,14 @@ import React from "react";
 import { blankCircle, CIRCLE_VALUES, MAX_CIRCLES, CIRCLE_PRESETS, createCirclePreset } from "./cards.js";
 import CircleSymbol, { SymbolIcon } from "./CircleSymbol.jsx";
 
-export default function CircleEditor({ circles, onChange }) {
+export default function CircleEditor({ circles, minimum = 0, onChange }) {
   const update = (index, patch) => onChange(circles.map((circle, i) => i === index ? { ...circle, ...patch } : circle));
 
   return (
     <fieldset>
       <legend>Circles ({circles.length}/{MAX_CIRCLES})</legend>
       <div className="circle-presets" role="group" aria-label="Circle configurations">
-        {Object.entries(CIRCLE_PRESETS).map(([name, preset]) => (
+        {Object.entries(CIRCLE_PRESETS).filter(([, preset]) => preset.length >= minimum).map(([name, preset]) => (
           <button
             key={name} type="button" title={preset.map((circle) => `${circle.value}${circle.icon ? " + eye" : ""}${circle.star ? " + star" : ""}`).join("; ")}
             aria-pressed={JSON.stringify(circles) === JSON.stringify(preset)}
@@ -32,11 +32,11 @@ export default function CircleEditor({ circles, onChange }) {
             <option value="">No icon</option>
             <option value="eye">Eye</option>
           </select>
-          <button type="button" aria-label={`Remove circle ${index + 1}`} onClick={() => onChange(circles.filter((_, i) => i !== index))}>X</button>
+          <button type="button" aria-label={`Remove circle ${index + 1}`} disabled={circles.length <= minimum} onClick={() => onChange(circles.filter((_, i) => i !== index))}>X</button>
         </div>
       ))}
       <button type="button" disabled={circles.length >= MAX_CIRCLES} onClick={() => onChange([...circles, blankCircle()])}>+ Add circle</button>
-      <p className="hint">A half-size power symbol is automatically placed at the end of the row.</p>
+      <p className="hint">Circles print at 2 cm diameter and wrap as needed. {minimum > 0 ? `Components require ${minimum}-${MAX_CIRCLES} circles.` : "Circles are optional; leave room for your text."}</p>
     </fieldset>
   );
 }

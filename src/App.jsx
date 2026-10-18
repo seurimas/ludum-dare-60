@@ -169,7 +169,7 @@ export default function App() {
           key={`${selectedPage}:${selected}`}
           card={cards[selected]} selected={selected}
           onSelect={setSelected} onChange={changeCard} onCopy={copyToNext} onClear={clearCard}
-          onError={(text) => setMessage({ text, error: true })} saveStatus={saveStatus}
+          saveStatus={saveStatus}
         />
         <section aria-label="Printable sheet">
           <div className="toolbar">
@@ -180,7 +180,7 @@ export default function App() {
             <input ref={fileRef} type="file" accept=".json,application/json" hidden onChange={openBackup} />
             <button type="button" onClick={resetSheet}>Clear page</button>
           </div>
-          <p className="hint print-help">US Letter, portrait, 6 cards in 3 rows of 2 with 3 mm gaps. Print at <strong>100% / Actual size</strong>, with <strong>headers and footers off</strong>. All card colors are written as text for monochrome printing. Cut along the dashed lines.</p>
+          <p className="hint print-help">US Letter, portrait. Six 2.4 x 3.4 inch cards in 2 rows of 3 with 3 mm gaps. Print at <strong>100% / Actual size</strong>, with <strong>headers and footers off</strong>. Components read in landscape within the same cut outline. Cut along the dashed lines.</p>
           <p className={`status${message.error ? " error" : ""}`} role="status" aria-live="polite">{message.text}</p>
           <p className="status notice" role="status" aria-live="polite">{overflowWarning}</p>
           <PageSelector

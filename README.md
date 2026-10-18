@@ -11,23 +11,8 @@ npm run dev -- --open
 ```
 
 Installation is only needed the first time or after dependencies change.
-The second command starts the app and opens it in your browser. Stop it with
-Ctrl+C. No account, backend, or internet connection is needed after installation.
-The source HTML is now a React entry point, not a double-click standalone app.
-
-## Project structure
-
-- [src/App.jsx](src/App.jsx): page state, autosaving, backup actions, and printing.
-- [src/PageSelector.jsx](src/PageSelector.jsx): page selection, names, and actions.
-- [src/CardEditor.jsx](src/CardEditor.jsx): card fields and cost controls.
-- [src/CircleEditor.jsx](src/CircleEditor.jsx): individual circle controls.
-- [src/CircleSymbol.jsx](src/CircleSymbol.jsx): shared circle and vector icons.
-- [src/CardSheet.jsx](src/CardSheet.jsx): printable cards and overflow detection.
-- [src/cards.js](src/cards.js): defaults, copying, and backup validation.
-- [src/styles.css](src/styles.css): screen layout and print styles.
-- [src/main.jsx](src/main.jsx): React entry point.
-- [src/EnergyPage.jsx](src/EnergyPage.jsx): standalone `/energy` screen and symbols.
-- [src/energy.js](src/energy.js): deterministic energy-card distribution.
+Stop the server with Ctrl+C. No account, backend, or internet connection is
+needed after installation. This is a React app, not a double-click HTML file.
 
 ```powershell
 npm test
@@ -38,117 +23,107 @@ npm run preview -- --open
 Tests use Node's built-in test runner. The build produces a static app in `dist`;
 preview serves that build locally. There is no router or additional UI framework.
 
+## Non-energy cards
+
+The editor at `/` generates a new 24-card spread once for this revision, ignoring
+older saved data. Later reloads restore edits using the new version 6 autosave
+key. Old saves are left untouched; backups from versions 1-5 are not supported.
+
+Cards are exactly **2.4 inches wide by 3.4 inches tall**, including their border.
+Six cards fit on a Letter sheet in three columns and two rows with 3 mm gaps.
+The initial spread fills four sheets, mixing tribes where needed:
+
+- Eight cards each for Yonar, Tiltch, and Naxatu, named "Yonar 1", etc.
+- Each tribe has three 3-cost, two 4-cost, two 5-cost, and one 6-cost card.
+- Cards start without rules text or optional circles.
+
+The name is at the top-left, with a small uppercase tribe underneath. Cost is
+a right-aligned row of 3-6 small circles containing that tribe's symbol, to the
+right of the name. Yonar, Tiltch, and Naxatu use the same icons as energy cards.
+The rest of the card holds editable text and optional numbered circles.
+Old color edge labels, watermarks, cost rectangles, and automatic power symbols
+are removed.
+
+### Components and circles
+
+Toggle **Component** in the editor to rotate the content 90 degrees within the
+same portrait cut outline. The card reads in landscape, with a name and 3-6
+numbered circles, but no tribe, cost, or rules text. Switching to Component
+adds circles if needed to reach three. Hidden tribe, cost, and text values are
+retained when switching back.
+
+Numbered circles remain exactly 2 cm in diameter. Up to six can be edited, with
+values 2-6, a star below, and an optional eye above. Components wrap three
+circles per row; regular cards wrap two per row. Component decorations are
+smaller to fit two rows without shrinking the circles. Components cannot have
+fewer than three circles. Regular cards can have none.
+
+Early, Late, and Standard circle presets remain available; only presets meeting
+the component minimum are offered for components. Text and circles share the
+remaining space on regular cards. Overflow warnings identify cards needing
+shorter text or fewer circles before printing.
+
+### Pages and backups
+
+- Click a card, use Previous / Next, or select its number to edit it.
+- The first tab is the editable current-page name; **Other pages** switches pages.
+- **+** opens a naming dialog to create a blank page or duplicate the current one.
+  Cancel or Escape leaves pages unchanged.
+- **Delete page** removes the current page after confirmation; the last page
+  cannot be deleted. **Clear page** resets its six cards.
+- **Copy to next card** makes an independent copy after confirmation.
+- **Download all pages** saves a version 6 JSON backup. **Open backup** replaces
+  all pages after validation and confirmation. Backups are data, not standalone
+  programs.
+
 ## Energy cards
 
 Open `/energy` (for example http://127.0.0.1:5173/energy), or follow **Energy cards**
 from the main screen. This separate page does not read or change saved card data.
 It generates four US Letter sheets with nine cards each (3 columns x 3 rows).
-Every card is exactly 2 inches wide by 3 inches tall, including its border:
+Every energy card remains exactly **2 inches wide by 3 inches tall**:
 
-- 24 singles: eight each of Yonar, Tiltch, and Naxatu. Each shows its icon and name.
-- 12 splits: four each of Yonar/Tiltch, Yonar/Naxatu, and Tiltch/Naxatu.
-  Each shows both icons and names stacked vertically, separated by a horizontal
-  line. Singles and splits share a sheet where needed
-  to fill all four sheets without empty slots.
-- Yonar uses a peace symbol, Tiltch a simple wooden club, and Naxatu an interrobang.
-- Small icons repeat in all four corners. Split-card corners show both icons
-  with a slash between them; the main icons and names remain stacked vertically.
-- Every card provides 1 energy; no numbers are printed. Attack and Heal cards
-  are not included.
+- 24 singles: eight each of Yonar, Tiltch, and Naxatu, with icon and name.
+- 12 splits: four each of Yonar/Tiltch, Yonar/Naxatu, and Tiltch/Naxatu, with
+  icons and names stacked vertically, separated by a horizontal line.
+- Yonar uses a peace symbol, Tiltch a tilted outlined wooden club with an oval
+  texture detail, and Naxatu an interrobang.
+- Small icons repeat in all four corners; split corners have both icons with
+  a slash between them.
+- Every card provides 1 energy; no numbers are printed. No Attack or Heal cards.
 
-Use **Print all cards / Save PDF** for the complete 36-card set. Print at 100% / Actual
-size, US Letter portrait, with headers and footers off. The print button hides
-the app controls and sheet headings before opening the print dialog and restores
-them after printing or cancelling. Browser printing (Ctrl+P) also hides them.
-The 3 mm card gaps and
-at least half-inch outer margins are preserved, with the grid centered in the
-printable area. The original card editor and its card sizes remain unchanged at `/`.
+**Print all cards / Save PDF** prints the complete energy set. The button hides
+controls and sheet headings before opening the dialog and restores them after
+printing or cancelling. Ctrl+P also hides them.
 
-## Make cards
+## Printing
 
-This revision initializes five pages with six cards each once, ignoring previous
-revision data. After that, saved edits are restored on reload:
+For non-energy cards, **Print all pages / Save PDF** prints all named pages;
+**Print page / Save PDF** prints only the selected page. Both check for clipped
+content. Page names and editor controls are not printed.
 
-| Page | Card title suffix | Tribe counts |
-| --- | --- | --- |
-| Blue | Replicators | 3 nomi, 2 runite, 1 nuke |
-| Red | Assemblers | 4 runite, 2 nomi |
-| Green | Reassemblers | 3 nuke, 2 nomi, 1 runite |
-| Black | Pulsars | 4 nuke, 1 nomi, 1 runite |
-| White | Adapters | 2 nomi, 2 runite, 2 nuke |
-
-Titles begin with the capitalized tribe. Numbered circles use these configurations:
-
-- **Early:** 5; 4 with eye and star. Used by the nomi and runite Pulsars
-  and the first three nuke Pulsars.
-- **Late:** 5; 3 with star; 2 with eye and star. Used by the nuke Replicator,
-  the first nuke Reassembler, the first two nomi Replicators, both nomi
-  Reassemblers, the first two runite Assemblers, and both runite Replicators.
-- **Standard:** 5; 3 with star. Used by all remaining cards, except Adapters
-  have no stars.
-
-Every row ends with a separate 1 cm power symbol, including Late rows and rows
-with no numbered circles. Power is no longer a circle choice or counted toward
-the three-circle limit. Numbered circles remain 2 cm in diameter.
-
-The circle editor has one-click buttons for all three configurations, which
-replace the complete circle row. Individual circles remain editable.
-Costs retain the default 1 white. The initializer is `createInitialPages()` in
-[src/cards.js](src/cards.js). New pages created with **+** remain blank.
-
-- The first tab above the preview always shows the current page. The second is an
-  **Other pages** dropdown containing every page except the current one (disabled
-  when there is only one page).
-- Click the final **+** tab to open a dialog, enter a page name, and choose
-  **Create page** to start a blank 6-card page. Cancel or Escape leaves pages unchanged.
-- Edit the name directly in the first tab to rename the current page.
-- In the **+** dialog, **Duplicate page** makes an independent copy of the current
-  page using the name entered in the dialog. **Delete page** removes the selected page after
-  confirmation; the last remaining page cannot be deleted.
-- **Clear page** clears only the selected page's cards, keeping its name and other pages.
-- Click a card in the preview, or use Previous / Next to select one of 6 cards.
-- Edit its title, tribe, center keywords, and **Card color** (red, blue, green,
-  white, or black). Color names repeat along all four edges and appear as a large
-  grey 45-degree background watermark. Card colors are text only, with no color fills.
-- Use **Add circle** to add up to three circles (one at a time). Each row has a
-  number (2-6) selector, a star toggle for below the circle, an optional
-  Eye icon selector for above it, and an X to remove it. All circles have the same
-  printed diameter of 2 cm at 100% / Actual size; eye and star positions stay
-  aligned. Editor thumbnails stay compact. Removing every numbered circle leaves
-  just the fixed power symbol.
-- Add 1-5 cost rectangles. Each shows a whole number from 1 to 999 and its color
-  name in black text on white. A new card starts with one white cost of 1.
-- Use **Copy to next card** for similar cards.
-- Text that does not fit triggers a warning; shorten it before printing.
-
-Edits are saved in browser storage when available and restored on startup.
-Download a backup to keep a separate copy.
-Use **Download all pages** to keep all page names and cards in one version 5 JSON
-backup, and **Open backup** to restore them. Opening a backup replaces all current
-pages after confirmation. A backup is data, not a standalone program; open it
-from the editor.
-
-This version starts fresh with a new autosave key. Older backups (versions 1-4)
-are not supported. Old browser saves are left untouched.
-
-## Print
-
-Click **Print all pages / Save PDF** to print every page in order in one print
-dialog, with one sheet per page. **Print page / Save PDF** prints only the selected
-page. Both actions check for clipped text; printing all pages checks every page.
-The page name
-is for organization and does not print on the cards. Choose:
+For either screen, choose:
 
 - US Letter (8.5 x 11 inches), portrait.
 - 100% / Actual size, not Fit to page.
-- Headers and footers off.
-- Grayscale or black-and-white printing is fine; no card or cost uses color fills.
-- One page per sheet; retain the page's half-inch margins.
+- Headers and footers off; one page per sheet.
+- Half-inch margins; grayscale or black-and-white is fine.
 
-The page contains 2 columns by 3 rows of cards separated by 3 mm gaps, within a
-7.5 x 10 inch printable area. Each card is approximately 9.38 x 8.27 cm; the
-circles remain 2 cm in diameter. Cut along the
-dashed borders. The editor and selection outlines do not print. You can also
-choose your browser's Save as PDF destination.
+The grid is centered in a 7.5 x 10 inch printable area with 3 mm card gaps.
+Cut along the dashed borders. Use the browser's Save as PDF destination if desired.
 
-If a print preview shows more than one page, check paper size, scaling, and margins.
+## Project structure
+
+- [src/App.jsx](src/App.jsx): non-energy state, autosaving, backups, printing.
+- [src/cards.js](src/cards.js): card defaults, initialization, copying, validation.
+- [src/CardEditor.jsx](src/CardEditor.jsx): card fields and Component toggle.
+- [src/CardSheet.jsx](src/CardSheet.jsx): printed cards and overflow detection.
+- [src/PageSelector.jsx](src/PageSelector.jsx): page tabs and naming dialog.
+- [src/CircleEditor.jsx](src/CircleEditor.jsx): numbered-circle editing and presets.
+- [src/CircleSymbol.jsx](src/CircleSymbol.jsx): circles, stars, and eye decorations.
+- [src/EnergyIcon.jsx](src/EnergyIcon.jsx): shared tribe and energy SVG icons.
+- [src/EnergyPage.jsx](src/EnergyPage.jsx): standalone energy screen.
+- [src/energy.js](src/energy.js): tribe symbols and energy distribution.
+- [src/styles.css](src/styles.css): shared UI and non-energy print layout.
+- [src/energy.css](src/energy.css): energy-card layout.
+- [src/main.jsx](src/main.jsx): React entry point and screen selection.
