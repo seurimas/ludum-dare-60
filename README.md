@@ -25,9 +25,26 @@ preview serves that build locally. There is no router or additional UI framework
 
 ## Non-energy cards
 
-The editor at `/` generates a new 24-card spread once for this revision, ignoring
-older saved data. Later reloads restore edits using the new version 6 autosave
-key. Old saves are left untouched; backups from versions 1-5 are not supported.
+The editor at `/` restores existing cards. It generates the initial 24-card spread
+only when no save exists. Version 6 was the last explicitly requested reset;
+older saves remain untouched and are not automatically resurrected.
+
+### Data preservation policy
+
+- `card-sheet-maker-v6` is now a permanent storage key, not a key to bump for
+  future formats. Format changes must migrate existing saves, preserving every
+  card, page, and user field, with regression tests for the old format.
+- Never reseed, drop cards, or silently substitute defaults to handle an
+  unsupported or damaged save. Loading fails visibly and editing is blocked;
+  existing saved bytes remain untouched.
+- Loading a valid save does not rewrite it. Unknown page, card, and circle fields
+  survive validation and subsequent saves.
+- If another tab changes the save, this editor refuses to overwrite it. Download
+  unsaved edits before reloading.
+- Only explicit user actions (confirmed clears, deletion, copying over a card,
+  or backup replacement) may intentionally remove existing cards or content.
+- Backups from versions 1-5 predate this preservation baseline and remain
+  unsupported; no new format may repeat that reset policy.
 
 Cards are exactly **2.4 inches wide by 3.4 inches tall**, including their border.
 Six cards fit on a Letter sheet in three columns and two rows with 3 mm gaps.
@@ -40,26 +57,34 @@ The initial spread fills four sheets, mixing tribes where needed:
 The name is at the top-left, with a small uppercase tribe underneath. Cost is
 a right-aligned row of 3-6 small circles containing that tribe's symbol, to the
 right of the name. Yonar, Tiltch, and Naxatu use the same icons as energy cards.
-The rest of the card holds editable text and optional numbered circles.
+The rest of the card holds editable text and optional circles.
 Old color edge labels, watermarks, cost rectangles, and automatic power symbols
 are removed.
 
 ### Components and circles
 
 Toggle **Component** in the editor to rotate the content 90 degrees within the
-same portrait cut outline. The card reads in landscape, with a name and 3-6
-numbered circles, but no tribe, cost, or rules text. Switching to Component
-adds circles if needed to reach three. Hidden tribe, cost, and text values are
+same portrait cut outline. The card reads in landscape, with a name and up to six
+circles, but no tribe, cost, or rules text. Switching to Component
+preserves the current circles, including zero, one, or two. Hidden tribe, cost, and text values are
 retained when switching back.
 
-Numbered circles remain exactly 2 cm in diameter. Up to six can be edited, with
-values 2-6, a star below, and an optional eye above. Components wrap three
-circles per row; regular cards wrap two per row. Component decorations are
-smaller to fit two rows without shrinking the circles. Components cannot have
-fewer than three circles. Regular cards can have none.
+Circles remain exactly 2 cm in diameter. Each contains nothing, a Yonar/Tiltch/Naxatu
+symbol, an equal sign, or an asterisk. Nothing appears above or below a circle.
+Both regular cards and components support zero to six circles. Components wrap
+three circles per row; regular cards wrap two per row.
 
-Early, Late, and Standard circle presets remain available; only presets meeting
-the component minimum are offered for components. Text and circles share the
+Shortcuts replace the card's current circles:
+- **1 tribe** / **2 tribe**: one or two circles containing the card's tribe symbol.
+- **1 any**: one empty circle.
+- **special**: keeps the current number of circles, changing every content to an
+  asterisk (disabled when there are no circles).
+
+Components expose a non-printed shortcut tribe selector. Each circle can also
+be edited or removed independently. Old numbered circles or decoration fields
+are a data consistency error: loading stops and saved bytes stay untouched,
+without clearing or converting any card. Empty circle lists remain compatible.
+Text and circles share the
 remaining space on regular cards. Overflow warnings identify cards needing
 shorter text or fewer circles before printing.
 
@@ -102,6 +127,17 @@ For non-energy cards, **Print all pages / Save PDF** prints all named pages;
 **Print page / Save PDF** prints only the selected page. Both check for clipped
 content. Page names and editor controls are not printed.
 
+Both non-energy Print buttons first save a restorable JSON snapshot in the project
+directory, named `printed-cards-<UTC timestamp>-<unique ID>.json`. Selected-page
+printing includes only that page; print-all includes every page in order.
+Snapshots never replace browser saves or earlier snapshots. They are saved even
+if the print dialog is subsequently cancelled, and can be opened with **Open backup**.
+If the snapshot cannot be saved, printing stops with an error.
+
+This requires the local server (`npm run dev` or `npm run preview`); a static-only
+deployment cannot write to the project directory. Energy printing does not save
+snapshots. Browser Ctrl+P bypasses this save step; use the app's Print buttons.
+
 For either screen, choose:
 
 - US Letter (8.5 x 11 inches), portrait.
@@ -116,11 +152,12 @@ Cut along the dashed borders. Use the browser's Save as PDF destination if desir
 
 - [src/App.jsx](src/App.jsx): non-energy state, autosaving, backups, printing.
 - [src/cards.js](src/cards.js): card defaults, initialization, copying, validation.
+- [src/cardStorage.js](src/cardStorage.js): guarded loading and saving without reset fallbacks.
 - [src/CardEditor.jsx](src/CardEditor.jsx): card fields and Component toggle.
 - [src/CardSheet.jsx](src/CardSheet.jsx): printed cards and overflow detection.
 - [src/PageSelector.jsx](src/PageSelector.jsx): page tabs and naming dialog.
-- [src/CircleEditor.jsx](src/CircleEditor.jsx): numbered-circle editing and presets.
-- [src/CircleSymbol.jsx](src/CircleSymbol.jsx): circles, stars, and eye decorations.
+- [src/CircleEditor.jsx](src/CircleEditor.jsx): circle contents and shortcuts.
+- [src/CircleSymbol.jsx](src/CircleSymbol.jsx): circles with optional tribe, equal, or asterisk contents.
 - [src/EnergyIcon.jsx](src/EnergyIcon.jsx): shared tribe and energy SVG icons.
 - [src/EnergyPage.jsx](src/EnergyPage.jsx): standalone energy screen.
 - [src/energy.js](src/energy.js): tribe symbols and energy distribution.

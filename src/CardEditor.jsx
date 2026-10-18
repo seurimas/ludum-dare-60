@@ -41,7 +41,13 @@ export default function CardEditor({ card, selected, onSelect, onChange, onCopy,
           <textarea id="keywords" placeholder="Rules or other text" value={card.keywords} onChange={(event) => onChange({ keywords: event.target.value })} />
         </div>
       </>}
-      <CircleEditor circles={card.circles} minimum={card.component ? 3 : 0} onChange={(circles) => onChange({ circles })} />
+      {card.component && <div className="field">
+        <label htmlFor="shortcut-tribe">Shortcut tribe (not printed)</label>
+        <select id="shortcut-tribe" value={card.tribe} onChange={(event) => onChange({ tribe: event.target.value })}>
+          {TRIBES.map((tribe) => <option key={tribe}>{tribe}</option>)}
+        </select>
+      </div>}
+      <CircleEditor circles={card.circles} tribe={card.tribe} onChange={(circles) => onChange({ circles })} />
       {card.component && <p className="hint">Landscape content in the same portrait cut outline. Tribe, cost, and text are hidden; their values are kept when switching back.</p>}
       <div className="actions">
         <button type="button" disabled={selected === CARD_COUNT - 1} onClick={onCopy}>Copy to next card</button>
