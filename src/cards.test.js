@@ -2,9 +2,25 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { createCardStore } from "./cardStorage.js";
 import {
-  TRIBES, STORAGE_KEY, blankSheet, blankPage, blankCircle, copyCard, copyPage,
+  TRIBES, SYMBOL_TRIBES, STORAGE_KEY, blankSheet, blankPage, blankCircle, copyCard, copyPage,
   CIRCLE_CONTENTS, applyCircleShortcut, createInitialPages, serializeBackup, validateBackup, setComponent,
+  hasSideAttachables, hasCircleSideConflict,
 } from "./cards.js";
+
+test("side markers and circles are mutually exclusive without making existing saves invalid", () => {
+  const card = { ...blankSheet()[0], circles: [] };
+  assert.equal(hasSideAttachables(card), false);
+  assert.equal(hasSideAttachables({ ...card, attachables: { left: "", right: " ", bottom: "Base" } }), false);
+  const sided = { ...card, attachables: { left: "Armor", right: "", bottom: "" } };
+  assert.equal(hasSideAttachables(sided), true);
+  assert.equal(hasCircleSideConflict(sided), false);
+  const both = { ...sided, circles: [blankCircle()] };
+  assert.equal(hasCircleSideConflict(both), true);
+  assert.equal(hasCircleSideConflict({ ...both, component: true }), false);
+  const pages = [{ ...blankPage(), cards: [both, ...blankSheet().slice(1)] }];
+  const restored = validateBackup(JSON.parse(serializeBackup(pages)));
+  assert.deepEqual((restored.pages ?? restored)[0].cards[0], both);
+});
 
 function memoryStorage(value = null) {
   const values = new Map(value === null ? [] : [[STORAGE_KEY, value]]);
@@ -114,8 +130,8 @@ test("four full sheets contain 24 named cards with the exact cost spread per tri
   assert.ok(pages.every((page) => page.cards.length === 6));
   const cards = pages.flatMap((page) => page.cards);
   assert.equal(cards.length, 24);
-  assert.deepEqual(TRIBES, ["Yonar", "Tiltch", "Naxatu"]);
-  for (const tribe of TRIBES) {
+  assert.deepEqual(TRIBES, ["Yonar", "Tiltch", "Naxatu", "Starter"]);
+  for (const tribe of SYMBOL_TRIBES) {
     const group = cards.filter((card) => card.tribe === tribe);
     assert.deepEqual(group.map((card) => card.cost), [3, 3, 3, 4, 4, 5, 5, 6]);
     assert.deepEqual(group.map((card) => card.title), Array.from({ length: 8 }, (_, i) => `${tribe} ${i + 1}`));
@@ -178,7 +194,7 @@ test("copied cards and pages have independent circles and preserve component set
 
 test("circle shortcuts replace counts and use the selected tribe, while special preserves count", () => {
   const original = [{ content: "equal" }, { content: "empty" }, { content: "Tiltch" }];
-  for (const tribe of TRIBES) {
+  for (const tribe of SYMBOL_TRIBES) {
     assert.deepEqual(applyCircleShortcut("1 tribe", original, tribe), [{ content: tribe }]);
     const two = applyCircleShortcut("2 tribe", original, tribe);
     assert.deepEqual(two, [{ content: tribe }, { content: tribe }]);
@@ -191,6 +207,35 @@ test("circle shortcuts replace counts and use the selected tribe, while special 
   assert.deepEqual(original, [{ content: "equal" }, { content: "empty" }, { content: "Tiltch" }]);
   assert.throws(() => applyCircleShortcut("unknown", [], "Yonar"), /Unknown circle shortcut/);
   assert.throws(() => applyCircleShortcut("1 tribe", [], "unknown"), /Unknown tribe/);
+  for (const shortcut of ["1 tribe", "2 tribe"]) {
+    assert.throws(() => applyCircleShortcut(shortcut, [], "Starter"), /Starter has no tribe/);
+  }
+  assert.deepEqual(applyCircleShortcut("1 any", [], "Starter"), [blankCircle()]);
+});
+
+test("Starter and attachables round trip, including component-hidden values and independent copies", () => {
+  const pages = [blankPage("Starter cards")];
+  const card = pages[0].cards[0];
+  card.tribe = "Starter";
+  card.attachables = { left: "Left", right: "Right", bottom: "Bottom", extra: "Preserved" };
+  card.component = true;
+  assert.deepEqual(validateBackup(JSON.parse(serializeBackup(pages))), pages);
+  const copy = copyCard(card);
+  copy.attachables.left = "Changed";
+  assert.equal(card.attachables.left, "Left");
+  assert.equal(copy.attachables.extra, "Preserved");
+  assert.equal(setComponent(card, false).attachables.bottom, "Bottom");
+  const legacy = [blankPage("Existing")];
+  delete legacy[0].cards[0].attachables;
+  const raw = serializeBackup(legacy);
+  const storage = memoryStorage(raw);
+  assert.deepEqual(createCardStore(storage).load().pages, legacy);
+  assert.equal(storage.writes.length, 0);
+  assert.equal(storage.getItem(STORAGE_KEY), raw);
+  for (const attachables of [null, [], "text", {}, { left: 1, right: "", bottom: "" }]) {
+    pages[0].cards[0].attachables = attachables;
+    assert.throws(() => validateBackup({ version: 6, pages }), /invalid Attachables/);
+  }
 });
 
 test("old formats, empty pages and invalid page sizes are rejected", () => {

@@ -5,8 +5,15 @@ import { ENERGY_TYPES } from "./energy.js";
 export const STORAGE_KEY = "card-sheet-maker-v6";
 export const CARD_FORMAT_VERSION = 6;
 export const CARD_COUNT = 6;
-export const TRIBES = ENERGY_TYPES.map((type) => type.name);
-export const CIRCLE_CONTENTS = ["empty", ...TRIBES, "equal", "asterisk"];
+export const SYMBOL_TRIBES = ENERGY_TYPES.map((type) => type.name);
+export const TRIBES = [...SYMBOL_TRIBES, "Starter"];
+export const CIRCLE_CONTENTS = ["empty", ...SYMBOL_TRIBES, "equal", "asterisk"];
+export const ATTACHABLE_SLOTS = ["left", "right", "bottom"];
+export const blankAttachables = () => ({ left: "", right: "", bottom: "" });
+export const SIDE_ATTACHABLE_SLOTS = ["left", "right"];
+// Side markers sit where circles would print, so a non-component card uses one or the other.
+export const hasSideAttachables = (card) => !card.component && SIDE_ATTACHABLE_SLOTS.some((slot) => card.attachables?.[slot]?.trim());
+export const hasCircleSideConflict = (card) => hasSideAttachables(card) && card.circles.length > 0;
 export const MAX_CIRCLES = 6;
 export const blankCircle = () => ({ content: "empty" });
 
@@ -17,6 +24,7 @@ export function applyCircleShortcut(name, circles, tribe) {
   if (name === "special") return circles.map((circle) => ({ ...circle, content: "asterisk" }));
   if (name === "1 any") return [blankCircle()];
   if (!TRIBES.includes(tribe)) throw new Error(`Unknown tribe: ${tribe}`);
+  if (tribe === "Starter") throw new Error("Starter has no tribe circle shortcuts.");
   return Array.from({ length: name === "2 tribe" ? 2 : 1 }, () => ({ content: tribe }));
 }
 
@@ -27,6 +35,7 @@ export const blankCard = () => ({
   component: false,
   cost: 3,
   circles: [],
+  attachables: blankAttachables(),
 });
 
 export function setComponent(card, component) {
@@ -41,7 +50,7 @@ export const blankSheet = () => Array.from({ length: CARD_COUNT }, blankCard);
 export const blankPage = (name = "Page 1") => ({ name, cards: blankSheet() });
 
 export function createInitialPages() {
-  const cards = TRIBES.flatMap((tribe) =>
+  const cards = SYMBOL_TRIBES.flatMap((tribe) =>
     [3, 3, 3, 4, 4, 5, 5, 6].map((cost, index) => ({
       ...blankCard(), tribe, cost, title: `${tribe} ${index + 1}`,
     })),
@@ -56,6 +65,7 @@ export const serializeBackup = (pages) => JSON.stringify({ version: CARD_FORMAT_
 export const copyCard = (card) => ({
   ...card,
   circles: card.circles.map((circle) => ({ ...circle })),
+  ...(card.attachables === undefined ? {} : { attachables: { ...card.attachables } }),
 });
 export const copyPage = (page) => ({ ...page, name: `${page.name} (copy)`, cards: page.cards.map(copyCard) });
 
@@ -94,6 +104,11 @@ function validateCards(cards) {
       if (!circle || !CIRCLE_CONTENTS.includes(circle.content)) throw invalid();
       return { ...circle, content: circle.content };
     });
+    if (card.attachables !== undefined &&
+        (!card.attachables || typeof card.attachables !== "object" || Array.isArray(card.attachables) ||
+        ATTACHABLE_SLOTS.some((slot) => typeof card.attachables[slot] !== "string"))) {
+      throw new Error(`Card ${index + 1} has invalid Attachables. Left, right, and bottom must be text.`);
+    }
     return {
       ...card,
       title: card.title, tribe: card.tribe, keywords: card.keywords,

@@ -58,15 +58,35 @@ The name is at the top-left, with a small uppercase tribe underneath. Cost is
 a right-aligned row of 3-6 small circles containing that tribe's symbol, to the
 right of the name. Yonar, Tiltch, and Naxatu use the same icons as energy cards.
 The rest of the card holds editable text and optional circles.
+**Starter** is an additional tribe choice, with no printed tribe-cost circles
+and no **1 tribe** / **2 tribe** shortcuts. The saved cost is retained when
+switching tribes; general circle editing and non-tribe shortcuts remain available.
+Starter does not add cards to the initial spread or to the energy set.
+
+Non-component cards also have three **Attachables** text slots: left, right, and
+bottom. Each nonempty slot prints an outlined half ellipse (0.45 in deep, 1.4 in
+along the edge) with its flat side on the card edge and 16 px text inside it (up
+to two short lines). Side markers are centered in the bottom half of the card;
+the bottom marker is centered on the bottom edge. Side text reads along each edge
+with its top facing the card edge (left reads top-to-bottom, right reads
+bottom-to-top); bottom text reads horizontally.
+Empty or whitespace-only slots do not print or reserve space. The bottom marker
+reserves space from the main content; side markers do not, and the preview warns
+if rules text overlaps them. A non-component card has either circles or side
+markers, not both: the editor blocks adding one while the other is present, and
+existing cards that have both still load unchanged but show a warning.
+Attachables are hidden (not deleted) for components. Existing saves without this
+optional field load unchanged; backups and print snapshots retain it.
 Old color edge labels, watermarks, cost rectangles, and automatic power symbols
 are removed.
 
 ### Components and circles
 
 Toggle **Component** in the editor to rotate the content 90 degrees within the
-same portrait cut outline. The card reads in landscape, with a name and up to six
-circles, but no tribe, cost, or rules text. Switching to Component
-preserves the current circles, including zero, one, or two. Hidden tribe, cost, and text values are
+same portrait cut outline. The card reads in landscape, with a name, optional
+text (the same Text field, shown above the circles when not empty), and up to six
+circles, but no tribe or cost. Switching to Component
+preserves the current circles, including zero, one, or two. Hidden tribe, cost, and attachable values are
 retained when switching back.
 
 Circles remain exactly 2 cm in diameter. Each contains nothing, a Yonar/Tiltch/Naxatu

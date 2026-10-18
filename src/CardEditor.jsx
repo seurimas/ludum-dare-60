@@ -1,5 +1,5 @@
 import React from "react";
-import { CARD_COUNT, TRIBES, setComponent } from "./cards.js";
+import { ATTACHABLE_SLOTS, blankAttachables, CARD_COUNT, TRIBES, hasCircleSideConflict, hasSideAttachables, setComponent } from "./cards.js";
 import CircleEditor from "./CircleEditor.jsx";
 
 export default function CardEditor({ card, selected, onSelect, onChange, onCopy, onClear, saveStatus }) {
@@ -30,16 +30,33 @@ export default function CardEditor({ card, selected, onSelect, onChange, onCopy,
             {TRIBES.map((tribe) => <option key={tribe}>{tribe}</option>)}
           </select>
         </div>
-        <div className="field">
+        {card.tribe !== "Starter" && <div className="field">
           <label htmlFor="card-cost">Cost (tribe symbols)</label>
           <select id="card-cost" value={card.cost} onChange={(event) => onChange({ cost: Number(event.target.value) })}>
             {[3, 4, 5, 6].map((cost) => <option key={cost} value={cost}>{cost}</option>)}
           </select>
-        </div>
-        <div className="field">
-          <label htmlFor="keywords">Text</label>
-          <textarea id="keywords" placeholder="Rules or other text" value={card.keywords} onChange={(event) => onChange({ keywords: event.target.value })} />
-        </div>
+        </div>}
+      </>}
+      <div className="field">
+        <label htmlFor="keywords">Text{card.component ? " (optional)" : ""}</label>
+        <textarea id="keywords" placeholder={card.component ? "Optional component text" : "Rules or other text"} value={card.keywords} onChange={(event) => onChange({ keywords: event.target.value })} />
+      </div>
+      {!card.component && <>
+        <fieldset>
+          <legend>Attachables</legend>
+          {ATTACHABLE_SLOTS.map((slot) => {
+            const blocked = slot !== "bottom" && card.circles.length > 0 && !card.attachables?.[slot];
+            return (
+            <div className="field" key={slot}>
+              <label htmlFor={`attachable-${slot}`}>{slot[0].toUpperCase() + slot.slice(1)} attachable</label>
+              <input id={`attachable-${slot}`} disabled={blocked} placeholder={blocked ? "Remove circles to use side markers" : ""} value={card.attachables?.[slot] ?? ""} onChange={(event) => onChange({
+                attachables: { ...(card.attachables ?? blankAttachables()), [slot]: event.target.value },
+              })} />
+            </div>
+            );
+          })}
+          {hasCircleSideConflict(card) && <p className="notice">This card has both circles and side markers. Remove one of them.</p>}
+        </fieldset>
       </>}
       {card.component && <div className="field">
         <label htmlFor="shortcut-tribe">Shortcut tribe (not printed)</label>
@@ -47,8 +64,8 @@ export default function CardEditor({ card, selected, onSelect, onChange, onCopy,
           {TRIBES.map((tribe) => <option key={tribe}>{tribe}</option>)}
         </select>
       </div>}
-      <CircleEditor circles={card.circles} tribe={card.tribe} onChange={(circles) => onChange({ circles })} />
-      {card.component && <p className="hint">Landscape content in the same portrait cut outline. Tribe, cost, and text are hidden; their values are kept when switching back.</p>}
+      <CircleEditor circles={card.circles} tribe={card.tribe} locked={hasSideAttachables(card)} onChange={(circles) => onChange({ circles })} />
+      {card.component && <p className="hint">Landscape content in the same portrait cut outline. Tribe, cost, and attachables are hidden; their values are kept when switching back.</p>}
       <div className="actions">
         <button type="button" disabled={selected === CARD_COUNT - 1} onClick={onCopy}>Copy to next card</button>
         <button type="button" onClick={onClear}>Clear card</button>

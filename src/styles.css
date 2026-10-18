@@ -57,6 +57,17 @@ select.page-tab { width: auto; max-width: 40%; }
 .all-pages-print { position: absolute; left: -10000px; top: 0; width: 7.5in; visibility: hidden; pointer-events: none; }
 .card { position: relative; min-width: 0; min-height: 0; border: .5pt dashed #929292; color: black; background: white; overflow: hidden; cursor: pointer; }
 .card-content { position: absolute; inset: 0; padding: .1in; display: flex; flex-direction: column; gap: .08in; }
+.has-attachable-bottom .card-content { padding-bottom: .52in; }
+/* Half ellipse: --half-depth into the card, --half-length along the attached edge. */
+.card-attachable { --half-depth: .45in; --half-length: 1.4in; position: absolute; box-sizing: border-box; border: 1pt solid black; overflow: hidden; }
+.card-attachable-left, .card-attachable-right { top: 75%; width: var(--half-depth); height: var(--half-length); }
+.card-attachable-left { left: 0; border-left: none; border-radius: 0 var(--half-depth) var(--half-depth) 0 / 0 calc(var(--half-length) / 2) calc(var(--half-length) / 2) 0; transform: translateY(-50%); }
+.card-attachable-right { right: 0; border-right: none; border-radius: var(--half-depth) 0 0 var(--half-depth) / calc(var(--half-length) / 2) 0 0 calc(var(--half-length) / 2); transform: translateY(-50%); }
+.card-attachable-bottom { bottom: 0; left: 50%; width: var(--half-length); height: var(--half-depth); border-bottom: none; border-radius: calc(var(--half-length) / 2) calc(var(--half-length) / 2) 0 0 / var(--half-depth) var(--half-depth) 0 0; transform: translateX(-50%); }
+.card-attachable-text { position: absolute; width: 1in; max-height: 36px; font-size: 16px; line-height: 18px; text-align: center; overflow: hidden; overflow-wrap: anywhere; }
+.card-attachable-left .card-attachable-text { left: .2in; top: 50%; transform: translate(-50%, -50%) rotate(90deg); }
+.card-attachable-right .card-attachable-text { right: .2in; top: 50%; transform: translate(50%, -50%) rotate(-90deg); }
+.card-attachable-bottom .card-attachable-text { left: 50%; top: calc(100% - .2in); transform: translate(-50%, -50%); }
 .component-card .card-content { inset: auto; left: 50%; top: 50%; width: calc(3.4in - 1pt); height: calc(2.4in - 1pt); transform: translate(-50%, -50%) rotate(90deg); }
 .card.selected { outline: 3px solid #205fc7; outline-offset: -3px; }
 .card-heading { flex: 0 0 auto; display: flex; align-items: start; justify-content: space-between; gap: .04in; }
