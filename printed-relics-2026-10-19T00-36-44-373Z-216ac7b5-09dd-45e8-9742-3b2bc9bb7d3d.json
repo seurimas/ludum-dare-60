@@ -1,0 +1,42 @@
+{
+  "version": 2,
+  "banner": "On entering, choose one Magnum Opus to advance.",
+  "relics": {
+    "Yonar": {
+      "name": "Absolute Unity (Yonar)",
+      "top": {
+        "text": "While completed, at the start of the C.o.G. player's turn:\n\nDiscard an energy card from the deck. If it is a split energy card, pick one. Other player's rayguns CANNOT shoot with that energy.\n\nAlso resolve this effect on entering C.o.G.."
+      },
+      "middle": {
+        "text": "While completed:\n\nThe discarded or picked energy above is now the ONLY energy that other player rayguns CAN shoot with."
+      },
+      "bottom": {
+        "text": "When completed, peace reigns across the galaxy. All are one. Forever.\n\nThe antiquarian responsible does not last long enough as an individual to regret this."
+      }
+    },
+    "Tiltch": {
+      "name": "Fusion Sucker (Tiltch)",
+      "top": {
+        "text": "While completed:\n\nPlayers in C.o.G. take 1 less damage from all sources."
+      },
+      "middle": {
+        "text": "While completed:\n\nPlayers in C.o.G. take 1 less damage (2 less total) from all sources."
+      },
+      "bottom": {
+        "text": "When completed, this device acquires all fusion energy from the galaxy. Stars blink out. The fire of the galaxy is extinguished.\n\nThe antiquarian responsible expresses exteremely brief surprise at the energy now present here."
+      }
+    },
+    "Naxatu": {
+      "name": "Reality Collider (Naxatu)",
+      "top": {
+        "text": "While completed and C.o.G. is occupied:\n\nFor players outside of C.o.G.:\n* Draw and play 1 fewer energy.\n* Play 1 energy from the deck at the start of their turn."
+      },
+      "middle": {
+        "text": "While completed:\n\nThe above effect is now 2 fewer energy cards and play 2 from the deck."
+      },
+      "bottom": {
+        "text": "When completed, this reality has merged permanently with the next. And the next. And the next.\n\nThe antiquarian responsible experiences everything, if only for a brief moment. And another. And another."
+      }
+    }
+  }
+}
