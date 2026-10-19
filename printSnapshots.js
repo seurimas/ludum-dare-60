@@ -3,6 +3,7 @@ import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { serializeBackup, validateBackup } from "./src/cards.js";
 import { serializeReferenceData, validateReferenceData } from "./src/reference.js";
+import { serializeRelicsData, validateRelicsData } from "./src/relics.js";
 
 function registerSnapshotRoute(server, directory, { path, prefix, validate, serialize }) {
   server.middlewares.use(path, async (request, response) => {
@@ -53,6 +54,9 @@ export function printSnapshots(directory) {
     });
     registerSnapshotRoute(server, directory, {
       path: "/api/print-reference-snapshot", prefix: "printed-references", validate: validateReferenceData, serialize: serializeReferenceData,
+    });
+    registerSnapshotRoute(server, directory, {
+      path: "/api/print-relics-snapshot", prefix: "printed-relics", validate: validateRelicsData, serialize: serializeRelicsData,
     });
   }
   return {

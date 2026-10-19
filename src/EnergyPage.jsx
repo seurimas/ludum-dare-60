@@ -57,7 +57,8 @@ export default function EnergyPage() {
         <h1>Energy cards</h1>
         <p>36 cards on {pages.length} sheets: 24 single energy and 12 split energy. Every card provides 1 energy.</p>
         <a className="header-link" href="/">Card Sheet Maker</a>{" "}
-        <a className="header-link" href="/reference">Reference cards</a>
+        <a className="header-link" href="/reference">Reference cards</a>{" "}
+        <a className="header-link" href="/relics">Relics</a>
       </header>
       <main className="energy-main">
         <div className="toolbar">

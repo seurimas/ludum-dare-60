@@ -174,7 +174,7 @@ export default function ReferencePage() {
           <p className="status error" role="alert">{status.text}</p>
           <p>Do not clear browser storage. Restore access or use an app version that supports this save, then reload.</p>
           <button type="button" onClick={() => window.location.reload()}>Retry loading saved reference text</button>
-          <p><a href="/">Card Sheet Maker</a> &middot; <a href="/energy">Energy cards</a></p>
+          <p><a href="/">Card Sheet Maker</a> &middot; <a href="/energy">Energy cards</a> &middot; <a href="/relics">Relics</a></p>
         </section>
       </div>
     );
@@ -188,7 +188,8 @@ export default function ReferencePage() {
           General Reference/Cont., and {PLAYER_REFERENCE_COUNT} identical
           Player Turn/Player Reference cards.</p>
         <a className="header-link" href="/">Card Sheet Maker</a>{" "}
-        <a className="header-link" href="/energy">Energy cards</a>
+        <a className="header-link" href="/energy">Energy cards</a>{" "}
+        <a className="header-link" href="/relics">Relics</a>
       </header>
       <main className="reference-main">
         <section className="reference-editor" aria-label="Reference text editor">

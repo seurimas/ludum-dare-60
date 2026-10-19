@@ -13,7 +13,7 @@ export function createGuardedStore({ storage, key, createInitial, serialize, val
       const saved = storage.getItem(key);
       // Only a genuinely absent save allows initialization. Empty, malformed,
       // or unsupported data is still user data and must not be overwritten.
-      const data = saved === null ? createInitial() : validate(JSON.parse(saved));
+      const data = saved === null ? createInitial(storage) : validate(JSON.parse(saved));
       if (saved === null) {
         const initial = serialize(data);
         storage.setItem(key, initial);

@@ -196,26 +196,60 @@ the editor and toolbar the same way the other screens do. Printing first saves
 a restorable JSON snapshot, named `printed-references-<UTC timestamp>-<unique
 ID>.json`.
 
+## Relics
+
+Open `/relics` (for example http://127.0.0.1:5173/relics), or follow
+**Relics** from the other screens. Like the Reference page, this is a separate
+screen with its own storage key (`relics-v1`) and its own never-reseed,
+never-rewrite preservation guard; it does not read or change the main card
+save. It always prints one half US Letter sheet (8.5 x 5.5 inches):
+
+- A **banner** box across the top (free text, defaults to "On entering, choose
+  one Magnum Opus to advance.").
+- One column per symbol tribe - **Yonar**, **Tiltch**, **Naxatu** - each with
+  that tribe's icon, a Name, and the same Top/Middle/Bottom sections the
+  Relic card type has in the main editor (free text above a row of boxes).
+  Box counts are fixed at 3 (Top), 3 (Middle), and 4 (Bottom), same as the
+  main editor's Relic cards; they are not editable. The Middle section always
+  prints one extra box after the 3, with the number "2" in it.
+
+**The first time this page is opened**, it copies any existing Relic cards
+out of the main card pages into these three tribe slots (matching each old
+card's tribe from the `(Tribe)` text at the end of its title), so nothing has
+to be retyped. This is a one-time, read-only copy: the main save is never
+written to, and the original Relic cards are left exactly as they were in the
+main editor (this page does not replace the Relic card type there; both can
+be used). After that first copy, this page's save is completely independent -
+editing it does not touch the main cards, and editing Relic cards in the main
+editor does not touch this page.
+
+Edits save automatically to this browser, independent of the main card save.
+**Print / Save PDF** hides the editor and toolbar the same way the other
+screens do. Printing first saves a restorable JSON snapshot, named
+`printed-relics-<UTC timestamp>-<unique ID>.json`.
+
 ## Printing
 
 For non-energy cards, **Print all pages / Save PDF** prints all named pages;
 **Print page / Save PDF** prints only the selected page. Both check for clipped
 content. Page names and editor controls are not printed.
 
-Both non-energy Print buttons, and the Reference page's Print button, first save
-a restorable JSON snapshot in the project directory: `printed-cards-<UTC
-timestamp>-<unique ID>.json` for cards, `printed-references-<UTC
-timestamp>-<unique ID>.json` for the reference sheet. Selected-page card
-printing includes only that page; print-all includes every page in order.
-Snapshots never replace browser saves or earlier snapshots. They are saved even
-if the print dialog is subsequently cancelled, and can be opened with **Open backup**
-(cards) or restored from the file directly (reference, since there is no
-"open backup" control there). If the snapshot cannot be saved, printing stops
-with an error.
+The non-energy Print buttons, the Reference page's Print button, and the
+Relics page's Print button all first save a restorable JSON snapshot in the
+project directory: `printed-cards-<UTC timestamp>-<unique ID>.json` for cards,
+`printed-references-<UTC timestamp>-<unique ID>.json` for the reference
+sheet, and `printed-relics-<UTC timestamp>-<unique ID>.json` for the relics
+sheet. Selected-page card printing includes only that page; print-all
+includes every page in order. Snapshots never replace browser saves or
+earlier snapshots. They are saved even if the print dialog is subsequently
+cancelled, and can be opened with **Open backup** (cards) or restored from
+the file directly (reference and relics, since there is no "open backup"
+control there). If the snapshot cannot be saved, printing stops with an error.
 
 This requires the local server (`npm run dev` or `npm run preview`); a static-only
-deployment cannot write to the project directory. Energy printing does not save
-snapshots. Browser Ctrl+P bypasses this save step; use the app's Print buttons.
+deployment cannot write to the project directory. Energy printing does not
+save snapshots. Browser Ctrl+P bypasses this save step; use the app's Print
+buttons.
 
 For either screen, choose:
 
@@ -242,8 +276,11 @@ Cut along the dashed borders. Use the browser's Save as PDF destination if desir
 - [src/energy.js](src/energy.js): tribe symbols and energy distribution.
 - [src/ReferencePage.jsx](src/ReferencePage.jsx): standalone reference-card screen.
 - [src/reference.js](src/reference.js): reference-card data, validation, and storage.
+- [src/RelicsPage.jsx](src/RelicsPage.jsx): standalone relics screen.
+- [src/relics.js](src/relics.js): relics data, validation, storage, and the one-time copy from the main cards.
 - [src/styles.css](src/styles.css): shared UI and non-energy print layout.
 - [src/energy.css](src/energy.css): energy-card layout.
 - [src/reference.css](src/reference.css): reference-card layout.
+- [src/relics.css](src/relics.css): relics half-sheet layout.
 - [src/main.jsx](src/main.jsx): React entry point and screen selection.
-- [printSnapshots.js](printSnapshots.js): local dev/preview server endpoints that save print snapshots for cards and reference text.
+- [printSnapshots.js](printSnapshots.js): local dev/preview server endpoints that save print snapshots for cards, reference text, and relics.

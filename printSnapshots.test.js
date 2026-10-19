@@ -7,6 +7,7 @@ import { join } from "node:path";
 import { printSnapshots } from "./printSnapshots.js";
 import { createInitialPages, serializeBackup } from "./src/cards.js";
 import { blankReferenceData, serializeReferenceData } from "./src/reference.js";
+import { blankRelicsData, serializeRelicsData } from "./src/relics.js";
 
 async function startSnapshotServer(directory) {
   const handlers = new Map();
@@ -70,6 +71,30 @@ test("reference print snapshots save exact reference text with unique timestampe
     assert.equal(response.status, 201);
     const { filename } = await response.json();
     assert.match(filename, /^printed-references-\d{4}-\d{2}-\d{2}T[\d-]+Z-[\da-f-]+\.json$/);
+    assert.equal(await readFile(join(directory, filename), "utf8"), raw);
+    assert.equal((await post("broken")).status, 400);
+    assert.equal((await post(raw, "http://untrusted.example")).status, 403);
+    assert.equal((await readdir(directory)).length, 1);
+  } finally {
+    await close();
+    await rm(directory, { recursive: true });
+  }
+});
+
+test("relics print snapshots save exact relics data with unique timestamped filenames", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "relics-print-test-"));
+  const { origin, close } = await startSnapshotServer(directory);
+  const post = (body, source = origin) => fetch(`${origin}/api/print-relics-snapshot`, {
+    method: "POST", headers: { Origin: source, "Content-Type": "application/json" }, body,
+  });
+  try {
+    const data = blankRelicsData();
+    data.relics.Yonar.name = "Custom \u263a relic";
+    const raw = serializeRelicsData(data);
+    const response = await post(raw);
+    assert.equal(response.status, 201);
+    const { filename } = await response.json();
+    assert.match(filename, /^printed-relics-\d{4}-\d{2}-\d{2}T[\d-]+Z-[\da-f-]+\.json$/);
     assert.equal(await readFile(join(directory, filename), "utf8"), raw);
     assert.equal((await post("broken")).status, 400);
     assert.equal((await post(raw, "http://untrusted.example")).status, 403);

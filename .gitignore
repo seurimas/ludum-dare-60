@@ -1,2 +1,5 @@
 node_modules/
 dist/
+printed-cards-*.json
+printed-references-*.json
+printed-relics-*.json
