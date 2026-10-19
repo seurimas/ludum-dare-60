@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "playerReference": {
+    "phases": "1. Draw 3 energy cards.\n2. Play 3 energy cards.\n3. Do the following in any order:\n  a. Spend any played energy.\n  b. Use any devices not discovered this turn.\n  c. While in C.o.G., spend 2 \n  d. ONCE, while not in C.o.G. either:\n    - Discover an artifact from the row,\n       -OR-\n    - Complete a device, attaching ALL its components.\n4. Draw or discard to your hand size, if needed.",
+    "cog": "",
+    "completion": ""
+  },
+  "setupText": "* Give each player a \"Raygun\", \"Toolbox\", and \"HEV Suit\". Set the other starts aside.\n* Deal a \"Tiltch Cell\", \"Yonar Pulsar\", and \"Naxatu Assembly\" to discover row.\n* If you are playing with 2 players, remove \"Dominator\", \"Doomsdayer\", and \"Dimensional Harmonizer\".\n* Shuffle the artifact deck. Deal one more artifact to create the discover row.\n* Shuffle the energy deck and place it somewhere accessible.\n* Search the component deck for all starter components and components for artifacts in the discover row. \n* Place the rest of the component deck next to the artifact deck.\n* Each player draws 5 energy and sets a health counter to 20.\n* Place 3 sets of different color tokens somewhere accessible, for stored energy.",
+  "generalText": "Magnum Opus is an Elder-punk engine builder at the Center of the Galaxy (C.o.G.). Each player is a skilled scientist seeking to complete the work of one of three Elder races, whatever the consequences.\n\n"
+}

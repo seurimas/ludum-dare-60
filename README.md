@@ -161,18 +161,57 @@ Every energy card remains exactly **2 inches wide by 3 inches tall**:
 controls and sheet headings before opening the dialog and restores them after
 printing or cancelling. Ctrl+P also hides them.
 
+## Reference cards
+
+Open `/reference` (for example http://127.0.0.1:5173/reference), or follow
+**Reference cards** from the main or Energy screens. Like the Energy page, this
+is a separate screen with its own storage key (`reference-cards-v1`) and its own
+never-reseed, never-rewrite preservation guard; it does not read or change the
+main card save or the energy cards. It always prints two US Letter sheets -
+**Front** and **Back** - of six 2.4 x 3.4 inch cards each (3 columns x 2 rows,
+matching the non-energy card size), meant to be printed double-sided so each
+physical card has a front and a back:
+
+- **Front**: Setup, General Reference, and 4 identical Player Turn cards.
+- **Back**: Center of the Galaxy (C.o.G.) (back of Setup), General Reference
+  Cont. (back of General Reference), and 4 identical Player Reference cards
+  (back of Player Turn).
+- The Back sheet's three columns are reversed per row from the Front sheet, so
+  cards line up correctly after printing with **Flip on Long Edge** duplexing.
+  Print single-sided instead by printing the Front sheet, then feeding the
+  same paper back in to print the Back sheet on the reverse.
+- All six card faces are fully free text, each from its own text box in the
+  editor. A blank line (two or more consecutive newlines) prints as a
+  horizontal divider; single line breaks print normally. A line starting with
+  `#` prints bold and uppercase as a section title (the `#` itself is not
+  printed) - use this to lay out your own named sections (for example
+  `# Phases`) instead of fixed fields; content sizes to fit the text rather
+  than splitting into fixed equal thirds.
+- Editing the Player Turn or Player Reference text updates all four matching
+  cards at once; they cannot be edited independently.
+
+Edits save automatically to this browser, independent of the main card save.
+**Print / Save PDF** prints both sheets together (Front, then Back) and hides
+the editor and toolbar the same way the other screens do. Printing first saves
+a restorable JSON snapshot, named `printed-references-<UTC timestamp>-<unique
+ID>.json`.
+
 ## Printing
 
 For non-energy cards, **Print all pages / Save PDF** prints all named pages;
 **Print page / Save PDF** prints only the selected page. Both check for clipped
 content. Page names and editor controls are not printed.
 
-Both non-energy Print buttons first save a restorable JSON snapshot in the project
-directory, named `printed-cards-<UTC timestamp>-<unique ID>.json`. Selected-page
+Both non-energy Print buttons, and the Reference page's Print button, first save
+a restorable JSON snapshot in the project directory: `printed-cards-<UTC
+timestamp>-<unique ID>.json` for cards, `printed-references-<UTC
+timestamp>-<unique ID>.json` for the reference sheet. Selected-page card
 printing includes only that page; print-all includes every page in order.
 Snapshots never replace browser saves or earlier snapshots. They are saved even
-if the print dialog is subsequently cancelled, and can be opened with **Open backup**.
-If the snapshot cannot be saved, printing stops with an error.
+if the print dialog is subsequently cancelled, and can be opened with **Open backup**
+(cards) or restored from the file directly (reference, since there is no
+"open backup" control there). If the snapshot cannot be saved, printing stops
+with an error.
 
 This requires the local server (`npm run dev` or `npm run preview`); a static-only
 deployment cannot write to the project directory. Energy printing does not save
@@ -192,7 +231,7 @@ Cut along the dashed borders. Use the browser's Save as PDF destination if desir
 
 - [src/App.jsx](src/App.jsx): non-energy state, autosaving, backups, printing.
 - [src/cards.js](src/cards.js): card defaults, initialization, copying, validation.
-- [src/cardStorage.js](src/cardStorage.js): guarded loading and saving without reset fallbacks.
+- [src/cardStorage.js](src/cardStorage.js): guarded loading and saving without reset fallbacks, shared by the main card save and the Reference save.
 - [src/CardEditor.jsx](src/CardEditor.jsx): card fields and Component toggle.
 - [src/CardSheet.jsx](src/CardSheet.jsx): printed cards and overflow detection.
 - [src/PageSelector.jsx](src/PageSelector.jsx): page tabs and naming dialog.
@@ -201,6 +240,10 @@ Cut along the dashed borders. Use the browser's Save as PDF destination if desir
 - [src/EnergyIcon.jsx](src/EnergyIcon.jsx): shared tribe and energy SVG icons.
 - [src/EnergyPage.jsx](src/EnergyPage.jsx): standalone energy screen.
 - [src/energy.js](src/energy.js): tribe symbols and energy distribution.
+- [src/ReferencePage.jsx](src/ReferencePage.jsx): standalone reference-card screen.
+- [src/reference.js](src/reference.js): reference-card data, validation, and storage.
 - [src/styles.css](src/styles.css): shared UI and non-energy print layout.
 - [src/energy.css](src/energy.css): energy-card layout.
+- [src/reference.css](src/reference.css): reference-card layout.
 - [src/main.jsx](src/main.jsx): React entry point and screen selection.
+- [printSnapshots.js](printSnapshots.js): local dev/preview server endpoints that save print snapshots for cards and reference text.

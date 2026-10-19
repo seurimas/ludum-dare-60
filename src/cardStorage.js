@@ -1,34 +1,54 @@
 import { STORAGE_KEY, createInitialPages, serializeBackup, validateBackup } from "./cards.js";
 
-export function createCardStore(storage) {
+// Generic guarded localStorage wrapper: seeds only when the key is genuinely
+// absent, never rewrites or reseeds existing data, and blocks cross-tab
+// overwrites. Used for both the main card pages and other independent saves
+// (such as the Reference page) that must follow the same preservation rules.
+export function createGuardedStore({ storage, key, createInitial, serialize, validate, itemName = "data" }) {
   let lastSaved;
   let loaded = false;
 
   return {
     load() {
-      const saved = storage.getItem(STORAGE_KEY);
+      const saved = storage.getItem(key);
       // Only a genuinely absent save allows initialization. Empty, malformed,
       // or unsupported data is still user data and must not be overwritten.
-      const pages = saved === null ? createInitialPages() : validateBackup(JSON.parse(saved));
+      const data = saved === null ? createInitial() : validate(JSON.parse(saved));
       if (saved === null) {
-        const initial = serializeBackup(pages);
-        storage.setItem(STORAGE_KEY, initial);
+        const initial = serialize(data);
+        storage.setItem(key, initial);
         lastSaved = initial;
       } else {
         lastSaved = saved;
       }
       loaded = true;
-      return { pages, restored: saved !== null };
+      return { data, restored: saved !== null };
+    },
+    save(data) {
+      if (!loaded) throw new Error(`Saving is blocked because existing ${itemName} could not be loaded.`);
+      validate(JSON.parse(serialize(data)));
+      if (storage.getItem(key) !== lastSaved) {
+        throw new Error(`Saved ${itemName} changed in another tab or outside this editor. Download your edits, then reload before saving again.`);
+      }
+      const next = serialize(data);
+      storage.setItem(key, next);
+      lastSaved = next;
+    },
+  };
+}
+
+export function createCardStore(storage) {
+  const store = createGuardedStore({
+    storage, key: STORAGE_KEY, createInitial: createInitialPages,
+    serialize: serializeBackup, validate: validateBackup, itemName: "cards",
+  });
+  return {
+    load() {
+      const { data, restored } = store.load();
+      return { pages: data, restored };
     },
     save(pages) {
-      if (!loaded) throw new Error("Saving is blocked because existing cards could not be loaded.");
-      validateBackup(JSON.parse(serializeBackup(pages)));
-      if (storage.getItem(STORAGE_KEY) !== lastSaved) {
-        throw new Error("Saved cards changed in another tab or outside this editor. Download your edits, then reload before saving again.");
-      }
-      const next = serializeBackup(pages);
-      storage.setItem(STORAGE_KEY, next);
-      lastSaved = next;
+      store.save(pages);
     },
   };
 }

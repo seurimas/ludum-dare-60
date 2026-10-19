@@ -199,7 +199,7 @@ export default function App() {
           <p className="status error" role="alert">{initial.status.text}</p>
           <p>Do not clear browser storage. Restore access or use an app version that supports this save, then reload.</p>
           <button type="button" onClick={() => window.location.reload()}>Retry loading saved cards</button>
-          <p><a href="/energy">Energy cards</a></p>
+          <p><a href="/energy">Energy cards</a> &middot; <a href="/reference">Reference cards</a></p>
         </section>
       </div>
     );
@@ -210,7 +210,8 @@ export default function App() {
       <header>
         <h1>Card Sheet Maker</h1>
         <p>{CARD_COUNT} cards per page. No account or internet needed once running.</p>
-        <a className="header-link" href="/energy">Energy cards</a>
+        <a className="header-link" href="/energy">Energy cards</a>{" "}
+        <a className="header-link" href="/reference">Reference cards</a>
       </header>
       <main>
         <CardEditor

@@ -1,0 +1,31 @@
+.reference-app { display: block; }
+.reference-main { display: block; padding: 24px; }
+.reference-editor { max-width: 640px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 14px; }
+.reference-editor .field label { font-weight: 600; }
+.reference-editor textarea { min-height: 70px; }
+.reference-sheet-heading { margin: 0 0 8px; }
+.reference-sheet-page { margin-top: 24px; }
+.reference-sheet-page:first-child { margin-top: 0; }
+.reference-sheet { width: 7.5in; height: 10in; display: grid; grid-template-columns: repeat(3, 2.4in); grid-template-rows: repeat(2, 3.4in); gap: 3mm; justify-content: center; align-content: center; background: white; box-shadow: 0 3px 16px #17233426; }
+.reference-card { position: relative; box-sizing: border-box; border: .5pt dashed #929292; padding: .1in; display: flex; flex-direction: column; gap: .06in; color: black; background: white; overflow: hidden; }
+.reference-card-title { flex: 0 0 auto; font-family: Georgia, serif; font-size: 13px; font-weight: bold; text-align: center; }
+.reference-rules-text { flex: 1; min-height: 0; display: flex; flex-direction: column; font-size: 11px; line-height: 1.3; overflow: hidden; }
+.reference-rules-paragraph { white-space: pre-wrap; overflow-wrap: anywhere; }
+.reference-heading-line { font-weight: 700; text-transform: uppercase; letter-spacing: .02em; }
+.reference-bullet-list { margin: 0; padding-left: 1.1em; }
+.reference-bullet-list li { margin: 0; padding: 0; }
+.reference-rules-separator { flex: 0 0 auto; width: 100%; height: 0; margin: .06in 0; border: none; border-top: .5pt solid #929292; }
+.reference-print-mode > header,
+.reference-print-mode .reference-main > :not(.reference-sheet-wrap) { display: none !important; }
+.reference-print-mode .reference-main { padding: 0; margin: 0; }
+.reference-print-mode .preview-scroll { overflow: visible; padding: 0; }
+.reference-print-mode .reference-sheet { box-shadow: none; }
+.reference-print-mode .reference-sheet-heading { display: none; }
+.reference-print-mode .reference-sheet-page { margin: 0; }
+@media print {
+  .reference-app > header,
+  .reference-app .reference-main > :not(.reference-sheet-wrap) { display: none !important; }
+  .reference-sheet-heading { display: none; }
+  .reference-sheet-page { margin: 0; break-inside: avoid; break-after: page; }
+  .reference-sheet-page:last-child { break-after: auto; }
+}

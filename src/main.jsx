@@ -2,10 +2,17 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import EnergyPage from "./EnergyPage.jsx";
+import ReferencePage from "./ReferencePage.jsx";
 import "./styles.css";
+
+function Routed() {
+  if (/^\/energy\/?$/.test(window.location.pathname)) return <EnergyPage />;
+  if (/^\/reference\/?$/.test(window.location.pathname)) return <ReferencePage />;
+  return <App />;
+}
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    {/^\/energy\/?$/.test(window.location.pathname) ? <EnergyPage /> : <App />}
+    <Routed />
   </React.StrictMode>,
 );

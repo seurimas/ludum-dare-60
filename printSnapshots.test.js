@@ -6,17 +6,30 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { printSnapshots } from "./printSnapshots.js";
 import { createInitialPages, serializeBackup } from "./src/cards.js";
+import { blankReferenceData, serializeReferenceData } from "./src/reference.js";
+
+async function startSnapshotServer(directory) {
+  const handlers = new Map();
+  printSnapshots(directory).configureServer({ middlewares: { use(path, middleware) {
+    handlers.set(path, middleware);
+  } } });
+  const server = createServer((request, response) => {
+    const handler = handlers.get(new URL(request.url, "http://localhost").pathname);
+    if (!handler) {
+      response.writeHead(404);
+      response.end();
+      return;
+    }
+    handler(request, response);
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const origin = `http://127.0.0.1:${server.address().port}`;
+  return { origin, close: () => new Promise((resolve) => server.close(resolve)) };
+}
 
 test("print snapshots save exact selected/all pages with unique timestamped filenames", async () => {
   const directory = await mkdtemp(join(tmpdir(), "card-print-test-"));
-  let handler;
-  printSnapshots(directory).configureServer({ middlewares: { use(path, middleware) {
-    assert.equal(path, "/api/print-snapshot");
-    handler = middleware;
-  } } });
-  const server = createServer((request, response) => handler(request, response));
-  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
-  const origin = `http://127.0.0.1:${server.address().port}`;
+  const { origin, close } = await startSnapshotServer(directory);
   const post = (body, source = origin) => fetch(`${origin}/api/print-snapshot`, {
     method: "POST", headers: { Origin: source, "Content-Type": "application/json" }, body,
   });
@@ -36,10 +49,33 @@ test("print snapshots save exact selected/all pages with unique timestamped file
     assert.equal(new Set(filenames).size, 3);
     assert.equal((await post("broken")).status, 400);
     assert.equal((await post(serializeBackup(pages), "http://untrusted.example")).status, 403);
-    assert.equal((await fetch(origin)).status, 405);
+    assert.equal((await fetch(`${origin}/api/print-snapshot`)).status, 405);
     assert.equal((await readdir(directory)).length, 3);
   } finally {
-    await new Promise((resolve) => server.close(resolve));
+    await close();
+    await rm(directory, { recursive: true });
+  }
+});
+
+test("reference print snapshots save exact reference text with unique timestamped filenames", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "reference-print-test-"));
+  const { origin, close } = await startSnapshotServer(directory);
+  const post = (body, source = origin) => fetch(`${origin}/api/print-reference-snapshot`, {
+    method: "POST", headers: { Origin: source, "Content-Type": "application/json" }, body,
+  });
+  try {
+    const data = { ...blankReferenceData(), setupText: "Custom \u263a setup" };
+    const raw = serializeReferenceData(data);
+    const response = await post(raw);
+    assert.equal(response.status, 201);
+    const { filename } = await response.json();
+    assert.match(filename, /^printed-references-\d{4}-\d{2}-\d{2}T[\d-]+Z-[\da-f-]+\.json$/);
+    assert.equal(await readFile(join(directory, filename), "utf8"), raw);
+    assert.equal((await post("broken")).status, 400);
+    assert.equal((await post(raw, "http://untrusted.example")).status, 403);
+    assert.equal((await readdir(directory)).length, 1);
+  } finally {
+    await close();
     await rm(directory, { recursive: true });
   }
 });
